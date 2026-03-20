@@ -8,6 +8,7 @@ import WeatherCard from "./Components/WeatherCard/WeatherCard";
 import TemperatureChart from "./Components/TemperatureChart/TemperatureChart";
 import EmptyState from "./Components/EmptyState/EmptyState";
 import { WeatherAlert } from "./Components/WeatherAlert/WeatherAlert";
+import { WeatherBackground } from "./Components/WeatherBackground/WeatherBackground";
 import { Search, Moon, Sun, CloudSun } from "lucide-react";
 
 function App() {
@@ -173,6 +174,9 @@ function App() {
 
   return (
     <div className="app-container">
+      {weather && (
+        <WeatherBackground condition={weather.weather[0].main} />
+      )}
       <div className="logoContainer">
         <CloudSun size={64} className="logoIcon" />
         <h1 className="logoText">MeteoHub</h1>
