@@ -6,6 +6,8 @@ export interface WeatherData {
   name: string;
   sys: {
     country: string;
+    sunrise: number;
+    sunset: number;
   };
   main: {
     temp: number;
@@ -28,4 +30,6 @@ export interface WeatherData {
   rain?: {
     "1h"?: number;
   };
+  visibility: number;
+  timezone: number;
 }

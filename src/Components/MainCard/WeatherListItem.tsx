@@ -14,6 +14,7 @@ export interface WeatherItemProps {
     | "green";
   label: string;
   value: string | number;
+  iconStyle?: React.CSSProperties;
 }
 
 export const WeatherListItem = ({
@@ -21,11 +22,12 @@ export const WeatherListItem = ({
   colorClass,
   label,
   value,
+  iconStyle,
 }: WeatherItemProps) => {
   return (
     <div className={styles.listItem}>
       <div className={`${styles.iconBox} ${styles[`${colorClass}Box`]}`}>
-        <Icon size={20} className={styles[`${colorClass}Icon`]} />
+        <Icon size={20} className={styles[`${colorClass}Icon`]} style={iconStyle} />
       </div>
       <div className={styles.listText}>
         <span className={styles.label}>{label}</span>

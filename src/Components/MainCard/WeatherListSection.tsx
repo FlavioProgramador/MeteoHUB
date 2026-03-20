@@ -32,6 +32,7 @@ export const WeatherListSection = ({ weather, unit }: WeatherListSectionProps) =
         colorClass="blue"
         label="Direção dos Ventos"
         value={windDirection}
+        iconStyle={{ transform: `rotate(${weather.wind.deg}deg)`, transition: 'transform 1.5s ease-out' }}
       />
       <WeatherListItem
         icon={Thermometer}
