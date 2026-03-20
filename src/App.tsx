@@ -1,9 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
-import type { WeatherData } from "./Types/weather";
-import { getWeatherByAPI, getWeatherByCoordinates, getForecastByAPI, getForecastByCoordinates, getCitySuggestions } from "./Services/api";
-import type { ForecastData } from "./Types/forecast";
-import type { CitySuggestion } from "./Types/geocoding";
 import WeatherCard from "./Components/WeatherCard/WeatherCard";
 import TemperatureChart from "./Components/TemperatureChart/TemperatureChart";
 import EmptyState from "./Components/EmptyState/EmptyState";
@@ -13,23 +9,27 @@ import { SearchHistory } from "./Components/SearchHistory/SearchHistory";
 import { useSearchHistory } from "./Hooks/useSearchHistory";
 import { FavoriteCities } from "./Components/FavoriteCities/FavoriteCities";
 import { useFavorites } from "./Hooks/useFavorites";
-import { Search, Moon, Sun, CloudSun, Star } from "lucide-react";
+import { SearchBar } from "./Components/SearchBar/SearchBar";
+import { useWeather } from "./Hooks/useWeather";
+import { Moon, Sun, CloudSun, Star } from "lucide-react";
 
 function App() {
-  
-  const [city, setCity] = useState("");
-  const [weather, setWeather] = useState<WeatherData | null>(null);
-  const [forecast, setForecast] = useState<ForecastData | null>(null);
-  const [suggestions, setSuggestions] = useState<CitySuggestion[]>([]);
-  const [showSuggestions, setShowSuggestions] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [unit, setUnit] = useState<'metric' | 'imperial'>('metric');
-  const skipNextSuggestion = useRef(false);
+  const [searchedCity, setSearchedCity] = useState("");
+
   const { favorites, addFavorite, removeFavorite, isFavorite } = useFavorites();
   const { history, addToHistory, removeFromHistory, clearHistory } = useSearchHistory();
-
+  
+  const { 
+    weather, 
+    forecast, 
+    loading, 
+    error, 
+    fetchWeatherByCity, 
+    fetchWeatherByCoords,
+    setError 
+  } = useWeather(unit);
 
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";
@@ -55,129 +55,28 @@ function App() {
 
   useEffect(() => {
     if (!weather?.coord) return;
-    
-    const refetch = async () => {
-      setLoading(true);
-      try {
-        const data = await getWeatherByCoordinates(weather.coord.lat, weather.coord.lon, unit);
-        const forecastData = await getForecastByCoordinates(weather.coord.lat, weather.coord.lon, unit);
-        setWeather(data);
-        setForecast(forecastData);
-      } catch (err) {
-        console.error("Erro ao fazer refetch por mudança de unidade:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    refetch();
+    fetchWeatherByCoords(weather.coord.lat, weather.coord.lon);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [unit]);
 
-  useEffect(() => {
-    if (skipNextSuggestion.current) {
-      skipNextSuggestion.current = false;
-      return;
-    }
-    if (city.trim().length > 2) {
-      const delayDebounceFn = setTimeout(async () => {
-        const data = await getCitySuggestions(city);
-        setSuggestions(data);
-        setShowSuggestions(true);
-      }, 600);
-      return () => clearTimeout(delayDebounceFn);
-    } else {
-      setSuggestions([]);
-      setShowSuggestions(false);
-    }
-  }, [city]);
-
-  async function handleSearch(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setShowSuggestions(false);
-    setShowSuggestions(false);
-
-    const formData = new FormData(e.currentTarget);
-    const cidadeDigitada = formData.get("city") as string;
-
-    if (!cidadeDigitada) return;
-    setLoading(true);
-    setError(null);
-
-    try {
-      const data = await getWeatherByAPI(cidadeDigitada, unit);
-      const forecastData = await getForecastByAPI(cidadeDigitada, unit);
-      setWeather(data);
-      setForecast(forecastData);
-      addToHistory(data.name);
-    } catch (err) {
-      setError("Erro ao buscar dados da API. Tem certeza de que a cidade " + cidadeDigitada + " existe?");
-      setWeather(null);
-      setForecast(null);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function handleSuggestionClick(sug: CitySuggestion) {
-    setShowSuggestions(false);
-    setSuggestions([]);
-    skipNextSuggestion.current = true;
-    setCity(sug.name);
-    
-    if (!sug.lat || !sug.lon) {
-      return;
-    }
-
-    setLoading(true);
-    setError(null);
-
-    try {
-      const data = await getWeatherByCoordinates(sug.lat, sug.lon, unit);
-      const forecastData = await getForecastByCoordinates(sug.lat, sug.lon, unit);
-      setWeather(data);
-      setForecast(forecastData);
-      addToHistory(data.name);
-    } catch (err) {
-      setError("Erro ao buscar dados precisos da cidade selecionada.");
-      setWeather(null);
-      setForecast(null);
-    } finally {
-      setLoading(false);
-    }
-  }
+  const handleSearchSuccess = (cityName: string) => {
+    setSearchedCity(cityName);
+    addToHistory(cityName);
+  };
 
   async function handleLocation() {
     if (!navigator.geolocation) {
       setError("Geolocalização não é suportada por este navegador.");
       return;
     }
-
-    setLoading(true);
     setError(null);
-
     navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        try {
-          const { latitude, longitude } = position.coords;
-          const data = await getWeatherByCoordinates(latitude, longitude, unit);
-          const forecastData = await getForecastByCoordinates(latitude, longitude, unit);
-          setWeather(data);
-          setForecast(forecastData);
-          addToHistory(data.name);
-          skipNextSuggestion.current = true;
-          setCity(data.name); 
-        } catch (err) {
-          setError("Erro ao buscar dados de clima da sua localização atual.");
-          setWeather(null);
-          setForecast(null);
-        } finally {
-          setLoading(false);
-        }
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        fetchWeatherByCoords(latitude, longitude, handleSearchSuccess);
       },
-      (geoError) => {
+      () => {
         setError("Não foi possível acessar a localização. O usuário recusou o acesso ou ocorreu um erro.");
-        setLoading(false);
       }
     );
   }
@@ -194,33 +93,12 @@ function App() {
 
       <div className="searchContainer">
         <div className="searchRow">
-          <form className="searchForm" onSubmit={handleSearch}>
-            <div className="searchWrapper">
-              <input
-                className="searchInput"
-                type="text"
-                name="city"
-                placeholder="Digite o nome da cidade"
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-                onFocus={() => setShowSuggestions(true)}
-                onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
-                autoComplete="off"
-              />
-              {showSuggestions && suggestions.length > 0 && (
-                <ul className="suggestionsList">
-                  {suggestions.map((sug, i) => (
-                    <li key={i} onClick={() => handleSuggestionClick(sug)}>
-                      {sug.name}{sug.state ? `, ${sug.state}` : ''} - {sug.country}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-            <button className="searchIconBtn" type="submit" disabled={loading} aria-label="Buscar">
-              <Search size={22} className="searchIconBlue" />
-            </button>
-          </form>
+          <SearchBar 
+            searchedCity={searchedCity}
+            loading={loading}
+            onSearch={(city) => fetchWeatherByCity(city, handleSearchSuccess)}
+            onSuggestionClick={(lat, lon, name) => fetchWeatherByCoords(lat, lon, handleSearchSuccess)}
+          />
 
           <button className="locationBtn" type="button" onClick={handleLocation} disabled={loading}>
             {loading ? "Buscando..." : "Usar Localização"}
@@ -253,44 +131,13 @@ function App() {
         <FavoriteCities
           favorites={favorites}
           currentCity={weather?.name ?? ""}
-          onSelect={async (favCity: string) => {
-            skipNextSuggestion.current = true;
-            setCity(favCity);
-            setLoading(true);
-            setError(null);
-            try {
-              const data = await getWeatherByAPI(favCity, unit);
-              const forecastData = await getForecastByAPI(favCity, unit);
-              setWeather(data);
-              setForecast(forecastData);
-            } catch {
-              setError("Erro ao buscar dados de " + favCity);
-            } finally {
-              setLoading(false);
-            }
-          }}
+          onSelect={(favCity: string) => fetchWeatherByCity(favCity, handleSearchSuccess)}
           onRemove={removeFavorite}
         />
 
         <SearchHistory
           history={history}
-          onSelect={async (histCity) => {
-            skipNextSuggestion.current = true;
-            setCity(histCity);
-            setLoading(true);
-            setError(null);
-            try {
-              const data = await getWeatherByAPI(histCity, unit);
-              const forecastData = await getForecastByAPI(histCity, unit);
-              setWeather(data);
-              setForecast(forecastData);
-              addToHistory(data.name);
-            } catch {
-              setError("Erro ao buscar dados de " + histCity);
-            } finally {
-              setLoading(false);
-            }
-          }}
+          onSelect={(histCity: string) => fetchWeatherByCity(histCity, handleSearchSuccess)}
           onRemove={removeFromHistory}
           onClear={clearHistory}
         />
