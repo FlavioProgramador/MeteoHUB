@@ -5,9 +5,10 @@ import { WeatherListItem } from "./WeatherListItem";
 
 interface WeatherListSectionProps {
   weather: WeatherData;
+  unit: "metric" | "imperial";
 }
 
-export const WeatherListSection = ({ weather }: WeatherListSectionProps) => {
+export const WeatherListSection = ({ weather, unit }: WeatherListSectionProps) => {
   const directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
   const directionIndex = Math.round(weather.wind.deg / 45) % 8;
   const windDirection = directions[directionIndex];
@@ -24,7 +25,7 @@ export const WeatherListSection = ({ weather }: WeatherListSectionProps) => {
         icon={Wind}
         colorClass="orange"
         label="Vento"
-        value={`${weather.wind.speed} km/h`}
+        value={`${weather.wind.speed} ${unit === 'metric' ? 'km/h' : 'mph'}`}
       />
       <WeatherListItem
         icon={Compass}
@@ -36,7 +37,7 @@ export const WeatherListSection = ({ weather }: WeatherListSectionProps) => {
         icon={Thermometer}
         colorClass="red"
         label="Sensação Térmica"
-        value={`${Math.round(weather.main.feels_like)}°C`}
+        value={`${Math.round(weather.main.feels_like)}°${unit === 'metric' ? 'C' : 'F'}`}
       />
     </div>
   );

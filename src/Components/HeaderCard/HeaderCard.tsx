@@ -3,9 +3,11 @@ import styles from "./HeaderCard.module.css";
 
 interface HeaderCardProps {
   weather: WeatherData;
+  unit: "metric" | "imperial";
+  onToggleUnit: () => void;
 }
 
-const HeaderCard = ({ weather }: HeaderCardProps) => {
+const HeaderCard = ({ weather, unit, onToggleUnit }: HeaderCardProps) => {
   const date = new Date();
   const options: Intl.DateTimeFormatOptions = {
     weekday: "long",
@@ -24,9 +26,18 @@ const HeaderCard = ({ weather }: HeaderCardProps) => {
       </div>
       <div className={styles.headerRight}>
         <h1 className={styles.temperature}>
-          {Math.round(weather.main.temp)}°C
+          {Math.round(weather.main.temp)}°{unit === 'metric' ? 'C' : 'F'}
         </h1>
-        <p className={styles.condition}>{weather.weather[0].description}</p>
+        <div className={styles.conditionRow}>
+          <button 
+            className={styles.unitToggleSmall} 
+            onClick={onToggleUnit} 
+            aria-label="Alternar Unidade"
+          >
+            ºC / ºF
+          </button>
+          <p className={styles.condition}>{weather.weather[0].description}</p>
+        </div>
       </div>
     </header>
   );

@@ -18,6 +18,7 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [theme, setTheme] = useState<"light" | "dark">("light");
+  const [unit, setUnit] = useState<'metric' | 'imperial'>('metric');
 
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";
@@ -40,6 +41,27 @@ function App() {
       document.documentElement.removeAttribute("data-weather");
     }
   }, [weather]);
+
+  useEffect(() => {
+    if (!weather?.coord) return;
+    
+    const refetch = async () => {
+      setLoading(true);
+      try {
+        const data = await getWeatherByCoordinates(weather.coord.lat, weather.coord.lon, unit);
+        const forecastData = await getForecastByCoordinates(weather.coord.lat, weather.coord.lon, unit);
+        setWeather(data);
+        setForecast(forecastData);
+      } catch (err) {
+        console.error("Erro ao fazer refetch por mudança de unidade:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    refetch();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [unit]);
 
   useEffect(() => {
     if (city.trim().length > 2) {
@@ -82,8 +104,8 @@ function App() {
     setError(null);
 
     try {
-      const data = await getWeatherByAPI(cidadeDigitada);
-      const forecastData = await getForecastByAPI(cidadeDigitada);
+      const data = await getWeatherByAPI(cidadeDigitada, unit);
+      const forecastData = await getForecastByAPI(cidadeDigitada, unit);
       setWeather(data);
       setForecast(forecastData);
     } catch (err) {
@@ -107,8 +129,8 @@ function App() {
     setError(null);
 
     try {
-      const data = await getWeatherByCoordinates(sug.lat, sug.lon);
-      const forecastData = await getForecastByCoordinates(sug.lat, sug.lon);
+      const data = await getWeatherByCoordinates(sug.lat, sug.lon, unit);
+      const forecastData = await getForecastByCoordinates(sug.lat, sug.lon, unit);
       setWeather(data);
       setForecast(forecastData);
     } catch (err) {
@@ -133,8 +155,8 @@ function App() {
       async (position) => {
         try {
           const { latitude, longitude } = position.coords;
-          const data = await getWeatherByCoordinates(latitude, longitude);
-          const forecastData = await getForecastByCoordinates(latitude, longitude);
+          const data = await getWeatherByCoordinates(latitude, longitude, unit);
+          const forecastData = await getForecastByCoordinates(latitude, longitude, unit);
           setWeather(data);
           setForecast(forecastData);
           setCity(data.name); 
@@ -198,20 +220,22 @@ function App() {
 
       {weather || forecast ? (
         <div className="cardsContainer">
-          {weather && <WeatherCard weather={weather} />}
-          {forecast && <TemperatureChart data={forecast.list} />}
+          {weather && <WeatherCard weather={weather} unit={unit} onToggleUnit={() => setUnit(unit === 'metric' ? 'imperial' : 'metric')} />}
+          {forecast && <TemperatureChart data={forecast.list} unit={unit} />}
         </div>
       ) : (
         <EmptyState />
       )}
 
-      <button className="themeToggle" onClick={toggleTheme} aria-label="Alterar Tema">
-        {theme === "light" ? (
-          <Moon size={22} className="themeToggleIcon" />
-        ) : (
-          <Sun size={22} className="themeToggleIcon" style={{ color: "#fbbf24" }} />
-        )}
-      </button>
+      <div className="bottomActions">
+        <button className="themeToggle" onClick={toggleTheme} aria-label="Alterar Tema">
+          {theme === "light" ? (
+            <Moon size={22} className="themeToggleIcon" />
+          ) : (
+            <Sun size={22} className="themeToggleIcon" style={{ color: "#fbbf24" }} />
+          )}
+        </button>
+      </div>
     </div>
   );
 }

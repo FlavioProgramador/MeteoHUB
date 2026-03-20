@@ -186,6 +186,15 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
+.bottomActions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1rem;
+  padding-bottom: 2rem;
+}
+
 .themeToggle {
   background: var(--card-bg-glass);
   border: 1px solid var(--card-border);
@@ -197,7 +206,6 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  margin-top: 1rem;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: var(--card-shadow);
 }

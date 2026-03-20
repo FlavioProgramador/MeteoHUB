@@ -5,13 +5,14 @@ import { WeatherGridSection } from "./WeatherGridSection";
 
 interface MainCardProps {
   weather: WeatherData;
+  unit: "metric" | "imperial";
 }
 
-const MainCard = ({ weather }: MainCardProps) => {
+const MainCard = ({ weather, unit }: MainCardProps) => {
   return (
     <main className={styles.mainContainer}>
-      <WeatherListSection weather={weather} />
-      <WeatherGridSection weather={weather} />
+      <WeatherListSection weather={weather} unit={unit} />
+      <WeatherGridSection weather={weather} unit={unit} />
     </main>
   );
 };

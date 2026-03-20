@@ -5,22 +5,23 @@ import { WeatherGridItem } from "./WeatherGridItem";
 
 interface WeatherGridSectionProps {
   weather: WeatherData;
+  unit: "metric" | "imperial";
 }
 
-export const WeatherGridSection = ({ weather }: WeatherGridSectionProps) => {
+export const WeatherGridSection = ({ weather, unit }: WeatherGridSectionProps) => {
   return (
     <div className={styles.cardsSection}>
       <WeatherGridItem
         icon={Sun}
         colorClass="yellow"
         label="Máxima"
-        value={`${Math.round(weather.main.temp_max)}°C`}
+        value={`${Math.round(weather.main.temp_max)}°${unit === 'metric' ? 'C' : 'F'}`}
       />
       <WeatherGridItem
         icon={Moon}
         colorClass="indigo"
         label="Mínima"
-        value={`${Math.round(weather.main.temp_min)}°C`}
+        value={`${Math.round(weather.main.temp_min)}°${unit === 'metric' ? 'C' : 'F'}`}
       />
       <WeatherGridItem
         icon={CloudRain}

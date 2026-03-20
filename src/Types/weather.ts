@@ -1,4 +1,8 @@
 export interface WeatherData {
+  coord: {
+    lon: number;
+    lat: number;
+  };
   name: string;
   sys: {
     country: string;

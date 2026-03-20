@@ -47,11 +47,36 @@
   line-height: 1;
 }
 
+.conditionRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 0.25rem;
+}
+
+.unitToggleSmall {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  border-radius: 8px;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  backdrop-filter: blur(4px);
+}
+.unitToggleSmall:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
 .condition {
   font-size: 1.25rem;
   color: #d1d5db;
   text-transform: capitalize;
-  margin-top: 0.5rem;
+  margin-top: 0;
 }
 
 @media (max-width: 600px) {

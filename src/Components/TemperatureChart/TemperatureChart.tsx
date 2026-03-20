@@ -12,9 +12,10 @@ import styles from "./TemperatureChart.module.css";
 
 interface TemperatureChartProps {
   data: ForecastItem[];
+  unit: "metric" | "imperial";
 }
 
-const TemperatureChart = ({ data }: TemperatureChartProps) => {
+const TemperatureChart = ({ data, unit }: TemperatureChartProps) => {
   if (!data || data.length === 0) return null;
   const next24Hours = data.slice(0, 8).map((item) => {
     const date = new Date(item.dt_txt);
@@ -72,6 +73,7 @@ const TemperatureChart = ({ data }: TemperatureChartProps) => {
               }}
               itemStyle={{ color: "#60a5fa", fontWeight: "bold" }}
               labelStyle={{ color: "#94a3b8", marginBottom: "4px" }}
+              formatter={(value) => [`${value}º${unit === 'metric' ? 'C' : 'F'}`, 'Temp']}
             />
             <Area
               type="monotone"

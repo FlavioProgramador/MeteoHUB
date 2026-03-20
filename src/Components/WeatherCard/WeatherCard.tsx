@@ -6,13 +6,15 @@ import styles from "./WeatherCard.module.css";
 
 interface WeatherCardProps {
   weather: WeatherData;
+  unit: "metric" | "imperial";
+  onToggleUnit: () => void;
 }
 
-const WeatherCard = ({ weather }: WeatherCardProps) => {
+const WeatherCard = ({ weather, unit, onToggleUnit }: WeatherCardProps) => {
   return (
     <div className={styles.cardContainer}>
-      <HeaderCard weather={weather} />
-      <MainCard weather={weather} />
+      <HeaderCard weather={weather} unit={unit} onToggleUnit={onToggleUnit} />
+      <MainCard weather={weather} unit={unit} />
       <FooterCard />
     </div>
   );
