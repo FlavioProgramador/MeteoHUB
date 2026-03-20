@@ -117,3 +117,15 @@
     height: 80px;
   }
 }
+
+@media (max-width: 480px) {
+  .header {
+    padding: 1.5rem;
+  }
+  .cityName {
+    font-size: 2rem;
+  }
+  .temperature {
+    font-size: 4rem;
+  }
+}

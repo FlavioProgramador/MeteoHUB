@@ -163,3 +163,30 @@
   background: #a78bfa;
   box-shadow: 0 0 10px #a78bfa;
 }
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .emptyContainer {
+    padding: 2.5rem 1.5rem;
+    gap: 1.5rem;
+  }
+  .iconCircle {
+    width: 80px;
+    height: 80px;
+  }
+  .mainIcon {
+    width: 40px;
+    height: 40px;
+  }
+  .title {
+    font-size: 1.4rem;
+  }
+  .subtitle {
+    font-size: 0.95rem;
+  }
+  .featuresContainer {
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: center;
+  }
+}

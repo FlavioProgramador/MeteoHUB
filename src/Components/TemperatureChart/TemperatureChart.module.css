@@ -28,3 +28,19 @@
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+@media (max-width: 768px) {
+  .chartContainer {
+    padding: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .chartContainer {
+    padding: 1rem;
+    margin-top: 1.5rem;
+  }
+  .chartWrapper {
+    height: 200px;
+  }
+}

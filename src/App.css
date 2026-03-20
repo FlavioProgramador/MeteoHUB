@@ -254,3 +254,47 @@
   color: var(--text-main); 
   transition: var(--transition);
 }
+
+/* Responsividade Global - Tablet/Mobile */
+@media (max-width: 768px) {
+  .app-container {
+    width: 95vw;
+    padding: 1.5rem 0;
+    gap: 1.5rem;
+  }
+  .logoText {
+    font-size: 2.25rem;
+  }
+  .logoIcon {
+    width: 48px;
+    height: 48px;
+  }
+  .searchRow {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .searchWrapper {
+    width: 100%;
+    order: 1;
+  }
+  .locationBtn {
+    flex: 1;
+    order: 2;
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+  }
+  .favIconBtn {
+    order: 3;
+    width: 45px;
+    height: 45px;
+  }
+}
+
+@media (max-width: 480px) {
+  .logoText {
+    font-size: 1.75rem;
+  }
+  .locationBtn {
+    font-size: 0.85rem;
+  }
+}

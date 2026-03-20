@@ -91,3 +91,12 @@
     gap: 2.5rem;
   }
 }
+
+@media (max-width: 480px) {
+  .mainContainer {
+    padding: 1.5rem;
+  }
+  .cardsSection {
+    grid-template-columns: 1fr;
+  }
+}
