@@ -1,0 +1,62 @@
+.emptyContainer {
+  background: #8e9aab; 
+  border: 2px dashed #4b5563; 
+  border-radius: 20px;
+  padding: 4rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 1.5rem;
+}
+
+.iconWrapper {
+  margin-bottom: 1rem;
+}
+
+.iconCircle {
+  background: rgba(75, 85, 99, 0.2); 
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.searchIcon {
+  color: #60a5fa; 
+  stroke-width: 2.5;
+}
+
+.title {
+  color: #ffffff;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.subtitle {
+  color: #e5e7eb;
+  font-size: 1rem;
+  max-width: 500px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.pillsContainer {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.pill {
+  background: #374151; 
+  color: #f3f4f6;
+  padding: 0.6rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: default;
+}
