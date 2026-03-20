@@ -7,6 +7,7 @@ import type { CitySuggestion } from "./Types/geocoding";
 import WeatherCard from "./Components/WeatherCard/WeatherCard";
 import TemperatureChart from "./Components/TemperatureChart/TemperatureChart";
 import EmptyState from "./Components/EmptyState/EmptyState";
+import { WeatherAlert } from "./Components/WeatherAlert/WeatherAlert";
 import { Search, Moon, Sun, CloudSun } from "lucide-react";
 
 function App() {
@@ -220,6 +221,7 @@ function App() {
 
       {weather || forecast ? (
         <div className="cardsContainer">
+          {weather && <WeatherAlert weather={weather} unit={unit} />}
           {weather && <WeatherCard weather={weather} unit={unit} onToggleUnit={() => setUnit(unit === 'metric' ? 'imperial' : 'metric')} />}
           {forecast && <TemperatureChart data={forecast.list} unit={unit} />}
         </div>
