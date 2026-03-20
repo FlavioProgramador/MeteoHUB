@@ -4,7 +4,7 @@ import type { WeatherData } from "./Types/weather";
 import { getWeatherByAPI } from "./Services/api";
 import WeatherCard from "./Components/WeatherCard/WeatherCard";
 import EmptyState from "./Components/EmptyState/EmptyState";
-import { Search, Moon } from "lucide-react";
+import { Search, Moon, CloudSun } from "lucide-react";
 
 function App() {
   const [city, setCity] = React.useState("");
@@ -35,6 +35,11 @@ function App() {
 
   return (
     <div className="app-container">
+      <div className="logoContainer">
+        <CloudSun size={64} className="logoIcon" />
+        <h1 className="logoText">MeteoHub</h1>
+      </div>
+
       <div className="searchContainer">
         <form className="searchForm" onSubmit={handleSearch}>
           <input
