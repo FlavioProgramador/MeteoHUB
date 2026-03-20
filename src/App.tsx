@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./App.css";
 import type { WeatherData } from "./Types/weather";
 import { getWeatherByAPI, getWeatherByCoordinates, getForecastByAPI, getForecastByCoordinates, getCitySuggestions } from "./Services/api";
@@ -11,6 +11,7 @@ import { WeatherAlert } from "./Components/WeatherAlert/WeatherAlert";
 import { Search, Moon, Sun, CloudSun } from "lucide-react";
 
 function App() {
+  
   const [city, setCity] = useState("");
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [forecast, setForecast] = useState<ForecastData | null>(null);
@@ -20,6 +21,7 @@ function App() {
   const [error, setError] = useState<string | null>(null);
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [unit, setUnit] = useState<'metric' | 'imperial'>('metric');
+  const skipNextSuggestion = useRef(false);
 
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";
@@ -65,20 +67,10 @@ function App() {
   }, [unit]);
 
   useEffect(() => {
-    if (city.trim().length > 2) {
-      const delayDebounceFn = setTimeout(async () => {
-        const data = await getCitySuggestions(city);
-        setSuggestions(data);
-        setShowSuggestions(true);
-      }, 600);
-      return () => clearTimeout(delayDebounceFn);
-    } else {
-      setSuggestions([]);
-      setShowSuggestions(false);
+    if (skipNextSuggestion.current) {
+      skipNextSuggestion.current = false;
+      return;
     }
-  }, [city]);
-
-  useEffect(() => {
     if (city.trim().length > 2) {
       const delayDebounceFn = setTimeout(async () => {
         const data = await getCitySuggestions(city);
@@ -120,6 +112,8 @@ function App() {
 
   async function handleSuggestionClick(sug: CitySuggestion) {
     setShowSuggestions(false);
+    setSuggestions([]);
+    skipNextSuggestion.current = true;
     setCity(sug.name);
     
     if (!sug.lat || !sug.lon) {
@@ -160,6 +154,7 @@ function App() {
           const forecastData = await getForecastByCoordinates(latitude, longitude, unit);
           setWeather(data);
           setForecast(forecastData);
+          skipNextSuggestion.current = true;
           setCity(data.name); 
         } catch (err) {
           setError("Erro ao buscar dados de clima da sua localização atual.");
