@@ -14,11 +14,18 @@ export const SearchBar = ({ onSearch, onSuggestionClick, loading, searchedCity }
   const [searchTerm, setSearchTerm] = useState("");
   const [suggestions, setSuggestions] = useState<CitySuggestion[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  
   const skipNextSuggestion = useRef(false);
+  const isFocused = useRef(false);
 
-  // Sincroniza a caixa de texto se a pesquisa vier de outro canto (Favoritos, Recentes)
+  // Sincroniza a caixa de texto caso a pesquisa venha dos Favoritos/Recentes
+  // e bloqueia a abertura do dropdown
   useEffect(() => {
-    setSearchTerm(searchedCity);
+    if (searchedCity && searchedCity !== searchTerm) {
+      skipNextSuggestion.current = true;
+      setSearchTerm(searchedCity);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchedCity]);
 
   useEffect(() => {
@@ -29,8 +36,18 @@ export const SearchBar = ({ onSearch, onSuggestionClick, loading, searchedCity }
     if (searchTerm.trim().length > 2) {
       const delayDebounceFn = setTimeout(async () => {
         const data = await getCitySuggestions(searchTerm);
-        setSuggestions(data);
-        setShowSuggestions(true);
+        
+        // Remove cidades duplicadas retornadas pela API filtrando pelo nome e estado
+        const uniqueData = data.filter((v: CitySuggestion, i: number, a: CitySuggestion[]) => 
+          a.findIndex((t: CitySuggestion) => t.name === v.name && t.state === v.state && t.country === v.country) === i
+        );
+
+        setSuggestions(uniqueData);
+        
+        // Exibe a lista SOMENTE se o usuário ainda estiver com o input focado.
+        if (isFocused.current) {
+          setShowSuggestions(true);
+        }
       }, 600);
       return () => clearTimeout(delayDebounceFn);
     } else {
@@ -42,6 +59,7 @@ export const SearchBar = ({ onSearch, onSuggestionClick, loading, searchedCity }
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setShowSuggestions(false);
+    isFocused.current = false;
     if (!searchTerm.trim()) return;
     onSearch(searchTerm);
   }
@@ -69,8 +87,14 @@ export const SearchBar = ({ onSearch, onSuggestionClick, loading, searchedCity }
           placeholder="Digite o nome da cidade"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          onFocus={() => setShowSuggestions(true)}
-          onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+          onFocus={() => {
+            isFocused.current = true;
+            if (suggestions.length > 0) setShowSuggestions(true);
+          }}
+          onBlur={() => {
+            isFocused.current = false;
+            setTimeout(() => setShowSuggestions(false), 200);
+          }}
           autoComplete="off"
         />
         {showSuggestions && suggestions.length > 0 && (
