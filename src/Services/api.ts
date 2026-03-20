@@ -27,6 +27,7 @@ async function getWeatherByCoordinates(lat: number, lon: number) {
 }
 
 const FORECAST_URL = "https://api.openweathermap.org/data/2.5/forecast";
+const GEO_URL = "http://api.openweathermap.org/geo/1.0/direct";
 
 async function getForecastByAPI(city: string) {
     try {
@@ -48,4 +49,14 @@ async function getForecastByCoordinates(lat: number, lon: number) {
     }
 }
 
-export { getWeatherByAPI, getWeatherByCoordinates, getForecastByAPI, getForecastByCoordinates }
+async function getCitySuggestions(query: string) {
+    try {
+        const response = await axios.get(`${GEO_URL}?q=${query}&limit=5&appid=${API_KEY}`);
+        return response.data;
+    } catch (error) {
+        console.error("Erro ao buscar sugestões de cidades:", error);
+        return [];
+    }
+}
+
+export { getWeatherByAPI, getWeatherByCoordinates, getForecastByAPI, getForecastByCoordinates, getCitySuggestions }
