@@ -9,6 +9,8 @@ import TemperatureChart from "./Components/TemperatureChart/TemperatureChart";
 import EmptyState from "./Components/EmptyState/EmptyState";
 import { WeatherAlert } from "./Components/WeatherAlert/WeatherAlert";
 import { WeatherBackground } from "./Components/WeatherBackground/WeatherBackground";
+import { SearchHistory } from "./Components/SearchHistory/SearchHistory";
+import { useSearchHistory } from "./Hooks/useSearchHistory";
 import { FavoriteCities } from "./Components/FavoriteCities/FavoriteCities";
 import { useFavorites } from "./Hooks/useFavorites";
 import { Search, Moon, Sun, CloudSun, Star } from "lucide-react";
@@ -26,6 +28,7 @@ function App() {
   const [unit, setUnit] = useState<'metric' | 'imperial'>('metric');
   const skipNextSuggestion = useRef(false);
   const { favorites, addFavorite, removeFavorite, isFavorite } = useFavorites();
+  const { history, addToHistory, removeFromHistory, clearHistory } = useSearchHistory();
 
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";
@@ -105,6 +108,7 @@ function App() {
       const forecastData = await getForecastByAPI(cidadeDigitada, unit);
       setWeather(data);
       setForecast(forecastData);
+      addToHistory(data.name);
     } catch (err) {
       setError("Erro ao buscar dados da API. Tem certeza de que a cidade " + cidadeDigitada + " existe?");
       setWeather(null);
@@ -132,6 +136,7 @@ function App() {
       const forecastData = await getForecastByCoordinates(sug.lat, sug.lon, unit);
       setWeather(data);
       setForecast(forecastData);
+      addToHistory(data.name);
     } catch (err) {
       setError("Erro ao buscar dados precisos da cidade selecionada.");
       setWeather(null);
@@ -158,6 +163,7 @@ function App() {
           const forecastData = await getForecastByCoordinates(latitude, longitude, unit);
           setWeather(data);
           setForecast(forecastData);
+          addToHistory(data.name);
           skipNextSuggestion.current = true;
           setCity(data.name); 
         } catch (err) {
@@ -246,7 +252,7 @@ function App() {
         <FavoriteCities
           favorites={favorites}
           currentCity={weather?.name ?? ""}
-          onSelect={async (favCity) => {
+          onSelect={async (favCity: string) => {
             skipNextSuggestion.current = true;
             setCity(favCity);
             setLoading(true);
@@ -263,6 +269,29 @@ function App() {
             }
           }}
           onRemove={removeFavorite}
+        />
+
+        <SearchHistory
+          history={history}
+          onSelect={async (histCity) => {
+            skipNextSuggestion.current = true;
+            setCity(histCity);
+            setLoading(true);
+            setError(null);
+            try {
+              const data = await getWeatherByAPI(histCity, unit);
+              const forecastData = await getForecastByAPI(histCity, unit);
+              setWeather(data);
+              setForecast(forecastData);
+              addToHistory(data.name);
+            } catch {
+              setError("Erro ao buscar dados de " + histCity);
+            } finally {
+              setLoading(false);
+            }
+          }}
+          onRemove={removeFromHistory}
+          onClear={clearHistory}
         />
       </div>
 
