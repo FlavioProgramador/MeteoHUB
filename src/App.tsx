@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 import type { WeatherData } from "./Types/weather";
-import { getWeatherByAPI } from "./Services/api";
+import { getWeatherByAPI, getWeatherByCoordinates } from "./Services/api";
 import WeatherCard from "./Components/WeatherCard/WeatherCard";
 import EmptyState from "./Components/EmptyState/EmptyState";
 import { Search, Moon, Sun, CloudSun } from "lucide-react";
@@ -47,6 +47,36 @@ function App() {
     }
   }
 
+  async function handleLocation() {
+    if (!navigator.geolocation) {
+      setError("Geolocalização não é suportada por este navegador.");
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        try {
+          const { latitude, longitude } = position.coords;
+          const data = await getWeatherByCoordinates(latitude, longitude);
+          setWeather(data);
+          setCity(data.name); 
+        } catch (err) {
+          setError("Erro ao buscar dados de clima da sua localização atual.");
+          setWeather(null);
+        } finally {
+          setLoading(false);
+        }
+      },
+      (geoError) => {
+        setError("Não foi possível acessar a localização. O usuário recusou o acesso ou ocorreu um erro.");
+        setLoading(false);
+      }
+    );
+  }
+
   return (
     <div className="app-container">
       <div className="logoContainer">
@@ -69,8 +99,8 @@ function App() {
           </button>
         </form>
 
-        <button className="locationBtn" type="button">
-          Usar Localização
+        <button className="locationBtn" type="button" onClick={handleLocation} disabled={loading}>
+          {loading ? "Buscando..." : "Usar Localização"}
         </button>
       </div>
 

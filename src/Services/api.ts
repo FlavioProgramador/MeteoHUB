@@ -15,4 +15,15 @@ async function getWeatherByAPI(city: string) {
     }
 }
 
-export { getWeatherByAPI }
+async function getWeatherByCoordinates(lat: number, lon: number) {
+    try {
+        const response = await axios.get<WeatherData>(`${BASE_URL}?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&lang=pt_br`)
+        return response.data
+
+    } catch (error) {
+        console.error("Erro ao buscar dados da API por coordenadas:", error);
+        throw error;
+    }
+}
+
+export { getWeatherByAPI, getWeatherByCoordinates }
