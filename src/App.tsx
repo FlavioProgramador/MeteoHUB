@@ -30,6 +30,7 @@ function App() {
   const { favorites, addFavorite, removeFavorite, isFavorite } = useFavorites();
   const { history, addToHistory, removeFromHistory, clearHistory } = useSearchHistory();
 
+
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";
     setTheme(newTheme);

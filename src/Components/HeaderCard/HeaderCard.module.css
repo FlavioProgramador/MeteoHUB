@@ -4,6 +4,29 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 1.5rem;
+}
+
+/* ---- Ícone animado Meteocon ---- */
+.iconWrapper {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.weatherIcon {
+  width: 110px;
+  height: 110px;
+  object-fit: contain;
+  /* leve flutuação para dar vida ao ícone */
+  animation: iconFloat 4s ease-in-out infinite;
+  filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.3));
+}
+
+@keyframes iconFloat {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-6px); }
 }
 
 .headerLeft {
@@ -88,5 +111,9 @@
   .headerRight {
     align-items: flex-start;
     text-align: left;
+  }
+  .weatherIcon {
+    width: 80px;
+    height: 80px;
   }
 }

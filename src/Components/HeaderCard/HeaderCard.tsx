@@ -1,5 +1,6 @@
 import type { WeatherData } from "../../Types/weather";
 import styles from "./HeaderCard.module.css";
+import { getWeatherIconUrl, isDaytime } from "../../Utils/weatherIcon";
 
 interface HeaderCardProps {
   weather: WeatherData;
@@ -17,21 +18,35 @@ const HeaderCard = ({ weather, unit, onToggleUnit }: HeaderCardProps) => {
   };
   const formattedDate = date.toLocaleDateString("pt-BR", options);
 
+  const code = weather.weather[0].id;
+  const isDay = isDaytime(weather.sys.sunrise, weather.sys.sunset);
+  const iconUrl = getWeatherIconUrl(code, isDay);
+
   return (
     <header className={styles.header}>
+      <div className={styles.iconWrapper}>
+        <img
+          src={iconUrl}
+          alt={weather.weather[0].description}
+          className={styles.weatherIcon}
+          draggable={false}
+        />
+      </div>
+
       <div className={styles.headerLeft}>
         <h2 className={styles.cityName}>{weather.name}</h2>
         <p className={styles.country}>{weather.sys.country}</p>
         <p className={styles.date}>{formattedDate}</p>
       </div>
+      
       <div className={styles.headerRight}>
         <h1 className={styles.temperature}>
-          {Math.round(weather.main.temp)}°{unit === 'metric' ? 'C' : 'F'}
+          {Math.round(weather.main.temp)}°{unit === "metric" ? "C" : "F"}
         </h1>
         <div className={styles.conditionRow}>
-          <button 
-            className={styles.unitToggleSmall} 
-            onClick={onToggleUnit} 
+          <button
+            className={styles.unitToggleSmall}
+            onClick={onToggleUnit}
             aria-label="Alternar Unidade"
           >
             ºC / ºF
