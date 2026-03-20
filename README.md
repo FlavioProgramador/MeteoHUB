@@ -1,75 +1,74 @@
-# React + TypeScript + Vite
+<h1 align="center">
+  <img src="https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/cloud-sun.svg" alt="MeteoHub Logo" width="120">
+  <br>
+  MeteoHub ☁️
+</h1>
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+<p align="center">
+  <strong>Seu dashboard meteorológico premium com previsão em tempo real, UI de vidro imersiva (Glassmorphism) e design responsivo.</strong>
+</p>
 
-Currently, two official plugins are available:
+## ✨ Visão Geral
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+O **MeteoHub** é uma aplicação web de ponta para observar e acompanhar o clima em escala mundial, construída do zero em **React e TypeScript**. Focada 100% num modelo de Design System requintado, a plataforma entrega dados complexos de API com a experiência visual mais fluida e limpa encontrada hoje, fugindo de dashboards confusos ou simplistas demais.
 
-## React Compiler
+Consome instantaneamente a API do **OpenWeatherMap**, detalhando clima do momento, previsão completa dos próximos 5 dias, e métricas específicas (Índice de radiação UV, Poluição Qualidade do Ar - AQI, Vento e Visibilidade), tudo com background responsivo ao clima atual da região sondada!
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
+![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
+![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white)
+![CSS Modules](https://img.shields.io/badge/css_modules-38B2AC.svg?style=for-the-badge&logo=css3&logoColor=white)
 
-Note: This will impact Vite dev & build performances.
+## 🚀 Principais Features 
 
-## Expanding the ESLint configuration
+*   **🌍 Busca Inteligente com Autocomplete:** Sugestões e históricos no clique, com suporte imediato para localizações e nomes mundiais precisos.
+*   **📍 Localização Precisa via Satélite GPS:** Clique no botão de GPS e, com sua permissão, saiba as condições do lugar exato que  está no momento.
+*   **⭐ Favoritos em Cache (Local Storage):** Marque pelo botão em forma de estrela suas cidades prediletas e mude de um clima ao outro rapidamente, com persistência na memória.
+*   **🌗 Troca Dinâmica Light/Dark:** Tema integral do OS respeitado nativamente, além de Switch pelo botão "Mudar Tema". As transparências e as fontes reagem pixel for pixel.
+*   **💧 Interface Glassmorphism Pura:** Nada de interfaces "chapadas" - Os cartões absorvem as texturas e iluminação do background lindamente.
+*   **☁️ Contexto Dinâmico de Backgrounds:** Inverno em Paris? Nevasca no app. Verão no Rio de Janeiro? Dia claro na UI. Detecta e reage em cascata de visuais maravilhosos (Clean e Não Intrusivos).
+*   **🌡️ Radar Detalhado de Dados Múltiplos:** Sensação Térmica em decimal, Índice UV, Velocidade e Direção (°) dos Ventos, Visibilidade e o importante Índice AQI (Qualidade Global do Ar).
+*   **📉 Previsão Avançada e Gráficos:** Modelos descritivos a cada bloco de três horas que duram pelos próximos cinco dias.
+*   **🚨 Sistema de Alertas Governamental (Weather Alerts):** Quando os serviços meteorológicos governamentais lançarem alertas (Enchentes, Furacões etc), o MeteoHub exibirá cards urgentes traduzindo os eventos críticos para o usuário.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🛠️ Stack Tecnológico
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+A regra era clara: **Sem frameworks UI pesados** (Tailwind substituído pelo poder brutal do Vanilla CSS puro escalável e legível), extraindo máxima performance de:
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+*   **Linguagens:** `TypeScript`, `TSX`, `Vanilla CSS`
+*   **Ferramentas Base:** `React 18`, `Vite`
+*   **Requisições Assíncronas:** `Axios`
+*   **Elementos Visuais:** `Lucide React (Ícones)`, `Google Fonts (Inter / Outfit)`
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## 💻 Como Rodar na sua Máquina
+
+**1.** Faça o clone local em seu ambiente:
+```bash
+git clone https://github.com/SeuUser/meteo-hub.git
+cd meteo-hub
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+**2.** Instale as dependências essenciais do pacote de build no contêiner local: 
+```bash
+npm install
 ```
+
+**3.** Adquira suas Chaves de Clima:
+Obtenha gratuitamente uma chave (API KEY) registrando-se lá no portal: [OpenWeatherMap API](https://openweathermap.org/api)
+
+**4.** Configure o `.env`:
+Abra a raiz do projeto e declare a key que o framework buscará nos hooks de serviços:
+```env
+VITE_WEATHER_API_KEY=sua_API_key_verdadeira_colada_aqui
+```
+
+**5.** Divirta-se:
+Aqueça a turbina (dev mode local)
+```bash
+npm run dev
+```
+
+E vá para a url do terminal (`http://localhost:5173/`).
+
+## ⚖️ Licença
+Distribuído sob licença do MIT e criado para exibir qualidade UI máxima de desenvolvimento frontend num software open source de grande valia pública.
