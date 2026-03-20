@@ -3,7 +3,6 @@ import type { WeatherData } from "../Types/weather";
 
 const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
 
-// Instância base com parâmetros que se repetem em todas as requisições
 const api = axios.create({
     baseURL: "https://api.openweathermap.org",
     params: {
