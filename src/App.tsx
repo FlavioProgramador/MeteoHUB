@@ -33,28 +33,17 @@ function App() {
   }
 
   return (
-
-  <div>
-    <h1>MeteoHub</h1>
-    <form onSubmit={handleSearch}>
-      <input
-        type="text"
-        name="city"
-        placeholder="Digite o nome da cidade"
-      />
-      <button 
-        type="submit" 
-        disabled={loading}
-        >
-        {loading ? "Buscando..." : "Buscar clima"}
-      </button>
-      {error && <p style={{color: "red"}}>{error}</p>}
-    </form>
     <div>
-      {weather && <WeatherCard weather={weather} />}
+      <h1>MeteoHub</h1>
+      <form onSubmit={handleSearch}>
+        <input type="text" name="city" placeholder="Digite o nome da cidade" />
+        <button type="submit" disabled={loading}>
+          {loading ? "Buscando..." : "Buscar clima"}
+        </button>
+        {error && <p style={{ color: "red" }}>{error}</p>}
+      </form>
+      <div>{weather && <WeatherCard weather={weather} />}</div>
     </div>
-  </div>
-   
   );
 }
 
