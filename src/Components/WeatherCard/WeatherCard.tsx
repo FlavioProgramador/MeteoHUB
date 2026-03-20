@@ -1,7 +1,7 @@
-import type { WeatherData } from "../Types/weather";
-import HeaderCard from "./HeaderCard";
-import MainCard from "./MainCard";
-import FooterCard from "./FooterCard";
+import type { WeatherData } from "../../Types/weather";
+import HeaderCard from "../HeaderCard/HeaderCard";
+import MainCard from "../MainCard/MainCard";
+import FooterCard from "../FooterCard/FooterCard";
 import styles from "./WeatherCard.module.css";
 
 interface WeatherCardProps {

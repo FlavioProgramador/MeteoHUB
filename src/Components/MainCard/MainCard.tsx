@@ -1,5 +1,14 @@
-import type { WeatherData } from "../Types/weather";
-import { Droplet, Wind, Compass, Thermometer, Sun, Moon, CloudRain, Gauge } from "lucide-react";
+import type { WeatherData } from "../../Types/weather";
+import {
+  Droplet,
+  Wind,
+  Compass,
+  Thermometer,
+  Sun,
+  Moon,
+  CloudRain,
+  Gauge,
+} from "lucide-react";
 import styles from "./MainCard.module.css";
 
 interface MainCardProps {
@@ -13,9 +22,7 @@ const MainCard = ({ weather }: MainCardProps) => {
 
   return (
     <main className={styles.mainContainer}>
-      {/* Lista lateral esquerda */}
       <div className={styles.listSection}>
-        
         <div className={styles.listItem}>
           <div className={`${styles.iconBox} ${styles.tealBox}`}>
             <Droplet size={20} className={styles.tealIcon} />
@@ -52,19 +59,22 @@ const MainCard = ({ weather }: MainCardProps) => {
           </div>
           <div className={styles.listText}>
             <span className={styles.label}>Sensação Térmica</span>
-            <span className={styles.value}>{Math.round(weather.main.feels_like)}°C</span>
+            <span className={styles.value}>
+              {Math.round(weather.main.feels_like)}°C
+            </span>
           </div>
         </div>
       </div>
 
-      {/* Grid de cartões direita */}
       <div className={styles.cardsSection}>
         <div className={styles.miniCard}>
           <div className={styles.miniCardHeader}>
             <Sun size={18} className={styles.yellowIcon} />
             <span className={styles.label}>Máxima</span>
           </div>
-          <span className={styles.value}>{Math.round(weather.main.temp_max)}°C</span>
+          <span className={styles.value}>
+            {Math.round(weather.main.temp_max)}°C
+          </span>
         </div>
 
         <div className={styles.miniCard}>
@@ -72,7 +82,9 @@ const MainCard = ({ weather }: MainCardProps) => {
             <Moon size={18} className={styles.indigoIcon} />
             <span className={styles.label}>Mínima</span>
           </div>
-          <span className={styles.value}>{Math.round(weather.main.temp_min)}°C</span>
+          <span className={styles.value}>
+            {Math.round(weather.main.temp_min)}°C
+          </span>
         </div>
 
         <div className={styles.miniCard}>

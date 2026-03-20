@@ -1,9 +1,9 @@
 .footer {
-  background: #465161; /* Um pouco mais escuro que o corpo do Card */
+  background: #465161; 
   padding: 1rem 2rem;
   text-align: center;
   font-size: 0.85rem;
-  color: #d1d5db; /* gray-300 */
+  color: #d1d5db; 
 }
 
 .highlight {

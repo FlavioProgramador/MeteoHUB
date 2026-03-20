@@ -5,7 +5,6 @@
   gap: 3rem;
 }
 
-/* LISTA (ESQUERDA) */
 .listSection {
   display: flex;
   flex-direction: column;
@@ -28,7 +27,6 @@
   align-items: center;
 }
 
-/* Cores das caixas (fundo transparente) e dos ícones */
 .tealBox { background: rgba(20, 184, 166, 0.2); }
 .tealIcon { color: #2dd4bf; }
 
@@ -46,7 +44,6 @@
   flex-direction: column;
 }
 
-/* GRID DE CARTÕES (DIREITA) */
 .cardsSection {
   display: grid;
   grid-template-columns: 1fr 1fr;

@@ -1,4 +1,4 @@
-import type { WeatherData } from "../Types/weather";
+import type { WeatherData } from "../../Types/weather";
 import styles from "./HeaderCard.module.css";
 
 interface HeaderCardProps {
@@ -7,8 +7,13 @@ interface HeaderCardProps {
 
 const HeaderCard = ({ weather }: HeaderCardProps) => {
   const date = new Date();
-  const options: Intl.DateTimeFormatOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-  const formattedDate = date.toLocaleDateString('pt-BR', options);
+  const options: Intl.DateTimeFormatOptions = {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  };
+  const formattedDate = date.toLocaleDateString("pt-BR", options);
 
   return (
     <header className={styles.header}>
@@ -18,7 +23,9 @@ const HeaderCard = ({ weather }: HeaderCardProps) => {
         <p className={styles.date}>{formattedDate}</p>
       </div>
       <div className={styles.headerRight}>
-        <h1 className={styles.temperature}>{Math.round(weather.main.temp)}°C</h1>
+        <h1 className={styles.temperature}>
+          {Math.round(weather.main.temp)}°C
+        </h1>
         <p className={styles.condition}>{weather.weather[0].description}</p>
       </div>
     </header>

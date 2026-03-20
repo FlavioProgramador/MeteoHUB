@@ -2,7 +2,7 @@ import React from "react";
 import "./App.css";
 import type { WeatherData } from "./Types/weather";
 import { getWeatherByAPI } from "./Services/api";
-import WeatherCard from "./Components/WeatherCard";
+import WeatherCard from "./Components/WeatherCard/WeatherCard";
 
 function App() {
   const [city, setCity] = React.useState("");
@@ -36,24 +36,19 @@ function App() {
     <div className="app-container">
       <h1>MeteoHub - Previsão do Tempo</h1>
       <form onSubmit={handleSearch}>
-        <input 
-          type="text" 
-          name="city" 
-          placeholder="Digite o nome da cidade" 
+        <input
+          type="text"
+          name="city"
+          placeholder="Digite o nome da cidade"
           value={city}
           onChange={(e) => setCity(e.target.value)}
         />
-        <button 
-          type="submit" 
-          disabled={loading}
-        >
+        <button type="submit" disabled={loading}>
           {loading ? "Buscando..." : "Buscar clima"}
         </button>
         {error && <p style={{ color: "red" }}>{error}</p>}
       </form>
-      <div>
-        {weather && <WeatherCard weather={weather} />}
-      </div>
+      <div>{weather && <WeatherCard weather={weather} />}</div>
     </div>
   );
 }
