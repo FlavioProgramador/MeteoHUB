@@ -11,6 +11,7 @@ async function getWeatherByAPI(city: string) {
 
     } catch (error) {
         console.error("Erro ao buscar dados da API:", error);
+        throw error;
     }
 }
 

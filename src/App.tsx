@@ -1,8 +1,56 @@
+import React from "react";
 import "./App.css";
+import type { WeatherData } from "./Types/weather";
+import { getWeatherByAPI } from "./Services/api";
 
 function App() {
+  const [city, setCity] = React.useState("");
+  const [weather, setWeather] = React.useState<WeatherData | null>(null);
+  const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState<string | null>(null);
 
-  return <div>MeteoHUB</div>;
+  async function handleSearch(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    
+    const formData = new FormData(e.currentTarget);
+    const cidadeDigitada = formData.get("city") as string;
+
+    if (!cidadeDigitada) return;
+    setLoading(true);
+    setError(null);
+
+    try {
+      const data = await getWeatherByAPI(cidadeDigitada);
+      setWeather(data);
+      console.log("dados: ", data);
+    } catch (err) {
+      setError("Erro ao buscar dados da API");
+      setWeather(null);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+  <div>
+    <h1>MeteoHub</h1>
+    <form onSubmit={handleSearch}>
+      <input
+        type="text"
+        name="city"
+        placeholder="Digite o nome da cidade"
+      />
+      <button 
+        type="submit" 
+        disabled={loading}
+        >
+        {loading ? "Buscando..." : "Buscar clima"}
+      </button>
+      {error && <p style={{color: "red"}}>{error}</p>}
+    </form>
+  </div>
+   
+  );
 }
 
 export default App;
