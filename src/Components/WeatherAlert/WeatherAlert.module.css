@@ -34,13 +34,13 @@
 .danger {
   background: rgba(220, 38, 38, 0.18);
   border-color: rgba(220, 38, 38, 0.45);
-  color: #fecaca;
+  color: var(--alert-danger-text);
 }
 
 .warning {
   background: rgba(234, 139, 20, 0.18);
   border-color: rgba(234, 139, 20, 0.45);
-  color: #fde68a;
+  color: var(--alert-warning-text);
 }
 
 .alertLeft {

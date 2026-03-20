@@ -1,5 +1,5 @@
 .chartContainer {
-  background: var(--card-bg);
+  background: var(--card-bg-glass);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--card-border);
@@ -8,7 +8,7 @@
   box-shadow: var(--card-shadow);
   width: 100%;
   margin-top: 2rem;
-  color: #fff;
+  color: var(--text-main);
   animation: fadeIn 0.5s ease-out;
 }
 
@@ -16,7 +16,7 @@
   font-size: 1.1rem;
   font-weight: 600;
   margin-bottom: 1.5rem;
-  color: #fff;
+  color: var(--text-main);
 }
 
 .chartWrapper {

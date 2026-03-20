@@ -1,4 +1,3 @@
-/* src/global.css */
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
 
 * {
@@ -25,6 +24,10 @@
   --input-bg: #ffffff;
   --input-border: #3b82f6;
 
+  /* Alertas */
+  --alert-danger-text: #991b1b;
+  --alert-warning-text: #b45309;
+
   /* Fontes e animações globais */
   --font-family: 'Outfit', sans-serif;
   --transition: all 0.3s ease;
@@ -47,14 +50,18 @@
 /* Botões e Input */
   --input-bg: #1e293b;
   --input-border: #60a5fa;
+
+  /* Alertas */
+  --alert-danger-text: #fecaca;
+  --alert-warning-text: #fde68a;
 }
 
 /* --- ESTILOS DINÂMICOS BASEADOS NO CLIMA --- */
 
 /* ENSOLARADO (Clear) */
 [data-theme="light"][data-weather="clear"] {
-  --bg-gradient-start: #fef08a; /* Amarelo bem suave */
-  --bg-gradient-end: #bfdbfe;   /* Azul céu claro */
+  --bg-gradient-start: #fef08a; 
+  --bg-gradient-end: #bfdbfe;   
 }
 
 [data-theme="dark"][data-weather="clear"] {

@@ -47,32 +47,32 @@ const TemperatureChart = ({ data, unit }: TemperatureChartProps) => {
             </defs>
             <XAxis
               dataKey="time"
-              stroke="rgba(255,255,255,0.6)"
+              stroke="var(--text-muted)"
               fontSize={12}
               tickLine={false}
               axisLine={false}
             />
             <YAxis
-              stroke="rgba(255,255,255,0.6)"
+              stroke="var(--text-muted)"
               fontSize={12}
               tickLine={false}
               axisLine={false}
             />
             <Tooltip
               cursor={{
-                stroke: "rgba(255,255,255,0.2)",
+                stroke: "var(--text-muted)",
                 strokeWidth: 1,
                 strokeDasharray: "3 3",
               }}
               contentStyle={{
-                backgroundColor: "rgba(15, 23, 42, 0.8)",
+                backgroundColor: "var(--card-bg-glass)",
                 backdropFilter: "blur(10px)",
-                border: "1px solid rgba(255,255,255,0.1)",
+                border: "1px solid var(--card-border)",
                 borderRadius: "12px",
-                color: "#fff",
+                color: "var(--text-main)",
               }}
               itemStyle={{ color: "#60a5fa", fontWeight: "bold" }}
-              labelStyle={{ color: "#94a3b8", marginBottom: "4px" }}
+              labelStyle={{ color: "var(--text-muted)", marginBottom: "4px" }}
               formatter={(value) => [`${value}º${unit === 'metric' ? 'C' : 'F'}`, 'Temp']}
             />
             <Area
