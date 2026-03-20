@@ -11,12 +11,18 @@ import { FavoriteCities } from "./Components/FavoriteCities/FavoriteCities";
 import { useFavorites } from "./Hooks/useFavorites";
 import { SearchBar } from "./Components/SearchBar/SearchBar";
 import { useWeather } from "./Hooks/useWeather";
-import { Moon, Sun, CloudSun, Star } from "lucide-react";
+import { Star } from "lucide-react";
+import { Header } from "./Components/Header/Header";
+import { ThemeToggle } from "./Components/ThemeToggle/ThemeToggle";
+import { useTheme } from "./Hooks/useTheme";
+import { useGeolocation } from "./Hooks/useGeolocation";
 
 function App() {
-  const [theme, setTheme] = useState<"light" | "dark">("light");
   const [unit, setUnit] = useState<'metric' | 'imperial'>('metric');
   const [searchedCity, setSearchedCity] = useState("");
+
+  useTheme(); // Inicializa o listener de tema do sistema
+  const { handleLocation } = useGeolocation();
 
   const { favorites, addFavorite, removeFavorite, isFavorite } = useFavorites();
   const { history, addToHistory, removeFromHistory, clearHistory } = useSearchHistory();
@@ -30,19 +36,6 @@ function App() {
     fetchWeatherByCoords,
     setError 
   } = useWeather(unit);
-
-  const toggleTheme = () => {
-    const newTheme = theme === "light" ? "dark" : "light";
-    setTheme(newTheme);
-    document.documentElement.setAttribute("data-theme", newTheme);
-  };
-
-  useEffect(() => {
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      setTheme("dark");
-      document.documentElement.setAttribute("data-theme", "dark");
-    }
-  }, []);
 
   useEffect(() => {
     if (weather && weather.weather && weather.weather.length > 0) {
@@ -64,32 +57,20 @@ function App() {
     addToHistory(cityName);
   };
 
-  async function handleLocation() {
-    if (!navigator.geolocation) {
-      setError("Geolocalização não é suportada por este navegador.");
-      return;
-    }
-    setError(null);
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        fetchWeatherByCoords(latitude, longitude, handleSearchSuccess);
-      },
-      () => {
-        setError("Não foi possível acessar a localização. O usuário recusou o acesso ou ocorreu um erro.");
-      }
-    );
-  }
+  const onLocationClick = () => {
+    handleLocation({
+      onSuccess: (lat, lon) => fetchWeatherByCoords(lat, lon, handleSearchSuccess),
+      onError: setError
+    });
+  };
 
   return (
     <div className="app-container">
       {weather && (
         <WeatherBackground condition={weather.weather[0].main} />
       )}
-      <div className="logoContainer">
-        <CloudSun size={64} className="logoIcon" />
-        <h1 className="logoText">MeteoHub</h1>
-      </div>
+      
+      <Header />
 
       <div className="searchContainer">
         <div className="searchRow">
@@ -100,7 +81,7 @@ function App() {
             onSuggestionClick={(lat, lon, name) => fetchWeatherByCoords(lat, lon, handleSearchSuccess)}
           />
 
-          <button className="locationBtn" type="button" onClick={handleLocation} disabled={loading}>
+          <button className="locationBtn" type="button" onClick={onLocationClick} disabled={loading}>
             {loading ? "Buscando..." : "Usar Localização"}
           </button>
 
@@ -155,15 +136,7 @@ function App() {
         <EmptyState />
       )}
 
-      <div className="bottomActions">
-        <button className="themeToggle" onClick={toggleTheme} aria-label="Alterar Tema">
-          {theme === "light" ? (
-            <Moon size={22} className="themeToggleIcon" />
-          ) : (
-            <Sun size={22} className="themeToggleIcon" style={{ color: "#fbbf24" }} />
-          )}
-        </button>
-      </div>
+      <ThemeToggle />
     </div>
   );
 }
