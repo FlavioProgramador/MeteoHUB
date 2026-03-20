@@ -34,6 +34,13 @@
 
 .searchContainer {
   display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.searchRow {
+  display: flex;
   align-items: center;
   gap: 1rem;
   width: 100%;
@@ -163,6 +170,34 @@
 
 .locationBtn:active {
   transform: translateY(0);
+}
+
+.favIconBtn {
+  background: var(--card-bg-glass);
+  border: 1.5px solid var(--card-border);
+  backdrop-filter: blur(10px);
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--card-shadow);
+}
+
+.favIconBtn:hover {
+  transform: translateY(-2px) scale(1.05);
+  border-color: #fbbf24;
+  box-shadow: 0 6px 20px -5px rgba(251, 191, 36, 0.4);
+}
+
+.favIconActive {
+  background: linear-gradient(135deg, rgba(217, 119, 6, 0.25), rgba(251, 191, 36, 0.25));
+  border-color: #fbbf24;
+  box-shadow: 0 4px 15px -3px rgba(251, 191, 36, 0.4);
 }
 
 .errorMessage {

@@ -9,7 +9,9 @@ import TemperatureChart from "./Components/TemperatureChart/TemperatureChart";
 import EmptyState from "./Components/EmptyState/EmptyState";
 import { WeatherAlert } from "./Components/WeatherAlert/WeatherAlert";
 import { WeatherBackground } from "./Components/WeatherBackground/WeatherBackground";
-import { Search, Moon, Sun, CloudSun } from "lucide-react";
+import { FavoriteCities } from "./Components/FavoriteCities/FavoriteCities";
+import { useFavorites } from "./Hooks/useFavorites";
+import { Search, Moon, Sun, CloudSun, Star } from "lucide-react";
 
 function App() {
   
@@ -23,6 +25,7 @@ function App() {
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [unit, setUnit] = useState<'metric' | 'imperial'>('metric');
   const skipNextSuggestion = useRef(false);
+  const { favorites, addFavorite, removeFavorite, isFavorite } = useFavorites();
 
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";
@@ -183,37 +186,84 @@ function App() {
       </div>
 
       <div className="searchContainer">
-        <form className="searchForm" onSubmit={handleSearch}>
-          <div className="searchWrapper">
-            <input
-              className="searchInput"
-              type="text"
-              name="city"
-              placeholder="Digite o nome da cidade"
-              value={city}
-              onChange={(e) => setCity(e.target.value)}
-              onFocus={() => setShowSuggestions(true)}
-              onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
-              autoComplete="off"
-            />
-            {showSuggestions && suggestions.length > 0 && (
-              <ul className="suggestionsList">
-                {suggestions.map((sug, i) => (
-                  <li key={i} onClick={() => handleSuggestionClick(sug)}>
-                    {sug.name}{sug.state ? `, ${sug.state}` : ''} - {sug.country}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-          <button className="searchIconBtn" type="submit" disabled={loading} aria-label="Buscar">
-            <Search size={22} className="searchIconBlue" />
-          </button>
-        </form>
+        <div className="searchRow">
+          <form className="searchForm" onSubmit={handleSearch}>
+            <div className="searchWrapper">
+              <input
+                className="searchInput"
+                type="text"
+                name="city"
+                placeholder="Digite o nome da cidade"
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+                onFocus={() => setShowSuggestions(true)}
+                onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+                autoComplete="off"
+              />
+              {showSuggestions && suggestions.length > 0 && (
+                <ul className="suggestionsList">
+                  {suggestions.map((sug, i) => (
+                    <li key={i} onClick={() => handleSuggestionClick(sug)}>
+                      {sug.name}{sug.state ? `, ${sug.state}` : ''} - {sug.country}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+            <button className="searchIconBtn" type="submit" disabled={loading} aria-label="Buscar">
+              <Search size={22} className="searchIconBlue" />
+            </button>
+          </form>
 
-        <button className="locationBtn" type="button" onClick={handleLocation} disabled={loading}>
-          {loading ? "Buscando..." : "Usar Localização"}
-        </button>
+          <button className="locationBtn" type="button" onClick={handleLocation} disabled={loading}>
+            {loading ? "Buscando..." : "Usar Localização"}
+          </button>
+
+          {weather && (
+            <button
+              className={`favIconBtn ${isFavorite(weather.name) ? "favIconActive" : ""}`}
+              type="button"
+              onClick={() =>
+                isFavorite(weather.name)
+                  ? removeFavorite(weather.name)
+                  : addFavorite(weather.name)
+              }
+              aria-label={isFavorite(weather.name) ? "Remover dos favoritos" : "Adicionar aos favoritos"}
+              title={isFavorite(weather.name) ? "Remover dos favoritos" : "Adicionar aos favoritos"}
+            >
+              <Star
+                size={22}
+                style={{
+                  fill: isFavorite(weather.name) ? "#fbbf24" : "none",
+                  color: isFavorite(weather.name) ? "#fbbf24" : "currentColor",
+                  transition: "all 0.2s",
+                }}
+              />
+            </button>
+          )}
+        </div>
+
+        <FavoriteCities
+          favorites={favorites}
+          currentCity={weather?.name ?? ""}
+          onSelect={async (favCity) => {
+            skipNextSuggestion.current = true;
+            setCity(favCity);
+            setLoading(true);
+            setError(null);
+            try {
+              const data = await getWeatherByAPI(favCity, unit);
+              const forecastData = await getForecastByAPI(favCity, unit);
+              setWeather(data);
+              setForecast(forecastData);
+            } catch {
+              setError("Erro ao buscar dados de " + favCity);
+            } finally {
+              setLoading(false);
+            }
+          }}
+          onRemove={removeFavorite}
+        />
       </div>
 
       {error && <p className="errorMessage">{error}</p>}
