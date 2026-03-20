@@ -5,6 +5,8 @@ export interface WeatherData {
     temp_max: number;
     temp_min: number;
     humidity: number;
+    feels_like: number;
+    pressure: number;
   };
   weather: {
     description: string;
@@ -12,5 +14,9 @@ export interface WeatherData {
   }[];
   wind: {
     speed: number;
+    deg: number;
+  };
+  rain?: {
+    "1h"?: number;
   };
 }

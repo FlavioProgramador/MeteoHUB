@@ -2,6 +2,7 @@ import React from "react";
 import "./App.css";
 import type { WeatherData } from "./Types/weather";
 import { getWeatherByAPI } from "./Services/api";
+import WeatherCard from "./Components/WeatherCard";
 
 function App() {
   const [city, setCity] = React.useState("");
@@ -11,7 +12,7 @@ function App() {
 
   async function handleSearch(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    
+
     const formData = new FormData(e.currentTarget);
     const cidadeDigitada = formData.get("city") as string;
 
@@ -32,6 +33,7 @@ function App() {
   }
 
   return (
+
   <div>
     <h1>MeteoHub</h1>
     <form onSubmit={handleSearch}>
@@ -48,6 +50,9 @@ function App() {
       </button>
       {error && <p style={{color: "red"}}>{error}</p>}
     </form>
+    <div>
+      {weather && <WeatherCard weather={weather} />}
+    </div>
   </div>
    
   );
