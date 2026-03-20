@@ -1,8 +1,8 @@
-import React from "react";
 import type { WeatherData } from "../Types/weather";
 import HeaderCard from "./HeaderCard";
 import MainCard from "./MainCard";
 import FooterCard from "./FooterCard";
+import styles from "./WeatherCard.module.css";
 
 interface WeatherCardProps {
   weather: WeatherData;
@@ -10,7 +10,7 @@ interface WeatherCardProps {
 
 const WeatherCard = ({ weather }: WeatherCardProps) => {
   return (
-    <div className="container-card">
+    <div className={styles.cardContainer}>
       <HeaderCard weather={weather} />
       <MainCard weather={weather} />
       <FooterCard />
