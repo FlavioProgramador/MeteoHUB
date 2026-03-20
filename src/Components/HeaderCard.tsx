@@ -9,7 +9,7 @@ const HeaderCard = ({ weather }: HeaderCardProps) => {
   return (
     <div>
       <header>
-        <h2>Tempo atual em: {weather.name}</h2>
+        <h2>{weather.name}</h2>
         <h1>{weather.main.temp}°C</h1>
         <p>Condição: {weather.weather[0].description}</p>
       </header>
