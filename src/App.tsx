@@ -33,7 +33,7 @@ function App() {
   }
 
   return (
-    <div className="container">
+    <div className="app-container">
       <h1>MeteoHub - Previsão do Tempo</h1>
       <form onSubmit={handleSearch}>
         <input 
