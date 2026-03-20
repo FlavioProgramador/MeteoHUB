@@ -14,20 +14,22 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  margin-bottom: -1rem; 
+  margin-bottom: -1.5rem; 
 }
 
 .logoIcon {
-  color: #3b82f6;
+  color: var(--input-border);
   stroke-width: 2.5;
+  transition: var(--transition);
 }
 
 .logoText {
-  color: #1e293b;
+  color: var(--text-main);
   font-size: 3.5rem;
   font-weight: 800;
   margin: 0;
   letter-spacing: -1.5px;
+  transition: var(--transition);
 }
 
 .searchContainer {
@@ -38,27 +40,35 @@
 }
 
 .searchForm {
-  background: #eef2ff; 
-  border: 1.5px solid #3b82f6; 
+  background: var(--input-bg);
+  border: 1.5px solid var(--input-border); 
   display: flex;
   align-items: center;
   flex: 1;
   border-radius: 12px;
-  padding: 0.1rem 1rem;
+  padding: 0.25rem 1rem;
+  transition: var(--transition);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.searchForm:focus-within {
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
 }
 
 .searchInput {
   flex: 1;
   border: none;
   background: transparent;
-  font-size: 1.05rem;
-  color: #1e293b;
+  font-size: 1.1rem;
+  color: var(--text-main);
   outline: none;
   padding: 0.75rem 0.5rem;
+  font-family: inherit;
+  transition: var(--transition);
 }
 
 .searchInput::placeholder {
-  color: #94a3b8;
+  color: var(--text-muted);
 }
 
 .searchIconBtn {
@@ -69,49 +79,74 @@
   align-items: center;
   justify-content: center;
   padding: 0.5rem;
+  transition: var(--transition);
+}
+
+.searchIconBtn:hover {
+  transform: scale(1.1);
 }
 
 .searchIconBtn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  transform: none;
 }
 
 .searchIconBlue {
-  color: #60a5fa; 
+  color: var(--input-border); 
   stroke-width: 2.5;
+  transition: var(--transition);
 }
 
 .locationBtn {
-  background: linear-gradient(90deg, #2563eb, #14b8a6); 
+  background: linear-gradient(135deg, #3b82f6, #14b8a6); 
   color: white;
   border: none;
-  padding: 0.85rem 1.5rem;
+  padding: 0.95rem 1.75rem;
   border-radius: 12px;
   font-weight: 600;
   cursor: pointer;
   font-size: 1.05rem;
-  transition: opacity 0.2s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   white-space: nowrap;
+  font-family: inherit;
+  box-shadow: 0 4px 15px -3px rgba(59, 130, 246, 0.4);
 }
 
 .locationBtn:hover {
-  opacity: 0.9;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px -5px rgba(59, 130, 246, 0.5);
+}
+
+.locationBtn:active {
+  transform: translateY(0);
 }
 
 .errorMessage {
   color: #ef4444; 
   align-self: flex-start;
   margin-top: -1.5rem;
-  font-weight: bold;
+  font-weight: 600;
+  background: rgba(239, 68, 68, 0.1);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border-left: 4px solid #ef4444;
 }
 
 .content-wrapper {
   width: 100%;
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .themeToggle {
-  background: #374151;
-  border: none;
+  background: var(--card-bg-glass);
+  border: 1px solid var(--card-border);
+  backdrop-filter: blur(10px);
   width: 50px;
   height: 50px;
   border-radius: 50%;
@@ -120,14 +155,16 @@
   justify-content: center;
   cursor: pointer;
   margin-top: 1rem;
-  transition: transform 0.2s;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--card-shadow);
 }
 
 .themeToggle:hover {
-  transform: scale(1.1);
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15);
 }
 
 .themeToggleIcon {
-  color: #fbbf24; 
+  color: var(--text-main); 
+  transition: var(--transition);
 }

@@ -1,16 +1,30 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
 import type { WeatherData } from "./Types/weather";
 import { getWeatherByAPI } from "./Services/api";
 import WeatherCard from "./Components/WeatherCard/WeatherCard";
 import EmptyState from "./Components/EmptyState/EmptyState";
-import { Search, Moon, CloudSun } from "lucide-react";
+import { Search, Moon, Sun, CloudSun } from "lucide-react";
 
 function App() {
-  const [city, setCity] = React.useState("");
-  const [weather, setWeather] = React.useState<WeatherData | null>(null);
-  const [loading, setLoading] = React.useState(false);
-  const [error, setError] = React.useState<string | null>(null);
+  const [city, setCity] = useState("");
+  const [weather, setWeather] = useState<WeatherData | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [theme, setTheme] = useState<"light" | "dark">("light");
+
+  const toggleTheme = () => {
+    const newTheme = theme === "light" ? "dark" : "light";
+    setTheme(newTheme);
+    document.documentElement.setAttribute("data-theme", newTheme);
+  };
+
+  useEffect(() => {
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      setTheme("dark");
+      document.documentElement.setAttribute("data-theme", "dark");
+    }
+  }, []);
 
   async function handleSearch(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -66,8 +80,12 @@ function App() {
         {weather ? <WeatherCard weather={weather} /> : <EmptyState />}
       </div>
 
-      <button className="themeToggle" aria-label="Alterar Tema">
-        <Moon size={22} className="themeToggleIcon" />
+      <button className="themeToggle" onClick={toggleTheme} aria-label="Alterar Tema">
+        {theme === "light" ? (
+          <Moon size={22} className="themeToggleIcon" />
+        ) : (
+          <Sun size={22} className="themeToggleIcon" style={{ color: "#fbbf24" }} />
+        )}
       </button>
     </div>
   );

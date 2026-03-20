@@ -1,5 +1,5 @@
 /* src/global.css */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
 
 * {
   padding: 0;
@@ -8,27 +8,45 @@
 }
 
 :root {
-  /* Cores Minimalistas (Ice & Steel) */
-  --bg-gradient-start: #e2e8f0; 
-  --bg-gradient-end: #cbd5e1;
+  /* Cores Light Mode */
+  --bg-gradient-start: #e0e7ff; 
+  --bg-gradient-end: #f8fafc;
   
   /* Textos */
-  --text-main: #1e293b;
+  --text-main: #0f172a;
   --text-muted: #64748b;
   
-  /* Cores base de Cartões (Efeito Vidro) */
-  --card-bg-solid: #ffffff;
-  --card-bg-glass: rgba(255, 255, 255, 0.45);
-  --card-border: rgba(255, 255, 255, 0.6);
-  --card-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+  /* Cartões Efeito Vidro */
+  --card-bg-glass: rgba(255, 255, 255, 0.75);
+  --card-border: rgba(255, 255, 255, 0.8);
+  --card-shadow: 0 12px 40px -10px rgba(31, 38, 135, 0.1);
   
-  /* Botões e Ações */
-  --primary: #3b82f6;
-  --primary-hover: #2563eb;
-  --danger: #ef4444;
+  /* Botões e Input */
+  --input-bg: #ffffff;
+  --input-border: #3b82f6;
+
+  /* Fontes e animações globais */
+  --font-family: 'Outfit', sans-serif;
+  --transition: all 0.3s ease;
+}
+
+[data-theme="dark"] {
+  /* Cores Dark Mode */
+  --bg-gradient-start: #0f172a; 
+  --bg-gradient-end: #1e293b;
   
-  /* Fontes */
-  --font-family: 'Poppins', sans-serif;
+  /* Textos */
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  
+  /* Cartões Efeito Vidro Escuro */
+  --card-bg-glass: rgba(30, 41, 59, 0.75);
+  --card-border: rgba(255, 255, 255, 0.1);
+  --card-shadow: 0 12px 40px -10px rgba(0, 0, 0, 0.6);
+
+  /* Botões e Input */
+  --input-bg: #1e293b;
+  --input-border: #60a5fa;
 }
 
 body {
@@ -38,6 +56,22 @@ body {
   min-height: 100vh;
   display: flex;
   justify-content: center;
-  align-items: center; 
+  align-items: flex-start; 
   background-attachment: fixed;
+  transition: background 0.4s ease, color 0.4s ease;
+  overflow-y: scroll; 
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--text-muted);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3b82f6;
 }
