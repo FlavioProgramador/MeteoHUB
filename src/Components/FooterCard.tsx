@@ -1,12 +1,12 @@
-import React from "react";
+import styles from "./FooterCard.module.css";
 
 const FooterCard = () => {
   return (
-    <div>
+    <footer className={styles.footer}>
       <p>
-        Dados fornecidos por <strong>OpenWeatherMap</strong>
+        Dados fornecidos por <span className={styles.highlight}>OpenWeatherMap</span>
       </p>
-    </div>
+    </footer>
   );
 };
 

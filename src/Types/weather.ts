@@ -1,5 +1,8 @@
 export interface WeatherData {
   name: string;
+  sys: {
+    country: string;
+  };
   main: {
     temp: number;
     temp_max: number;

@@ -1,14 +1,11 @@
 .cardContainer {
-
-  background: var(--card-bg-glass);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--card-border);
-  border-radius: 24px;
-  box-shadow: var(--card-shadow);
+  background: #556070; /* tom de cinza azulado igual da imagem */
+  border-radius: 20px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   overflow: hidden;
   width: 100%;
   animation: fadeIn 0.5s ease-out;
+  color: #ffffff; 
 }
 
 @keyframes fadeIn {
