@@ -1,13 +1,15 @@
-import type { WeatherData } from "../../Types/weather";
+import type { WeatherData, AirPollutionData } from "../../Types/weather";
 import type { ForecastData } from "../../Types/forecast";
 import { WeatherAlert } from "../WeatherAlert/WeatherAlert";
 import WeatherCard from "../WeatherCard/WeatherCard";
 import TemperatureChart from "../TemperatureChart/TemperatureChart";
+import { AirQualityCard } from "../AirQualityCard/AirQualityCard";
 import EmptyState from "../EmptyState/EmptyState";
 
 interface WeatherDashboardProps {
   weather: WeatherData | null;
   forecast: ForecastData | null;
+  airPollution: AirPollutionData | null;
   unit: "metric" | "imperial";
   loading: boolean;
   error: string | null;
@@ -17,6 +19,7 @@ interface WeatherDashboardProps {
 export function WeatherDashboard({
   weather,
   forecast,
+  airPollution,
   unit,
   loading,
   error,
@@ -26,7 +29,7 @@ export function WeatherDashboard({
     return <div className="error">{error}</div>;
   }
 
-  if (weather || forecast) {
+  if (weather || forecast || airPollution) {
     return (
       <div className="cardsContainer">
         {weather && <WeatherAlert weather={weather} unit={unit} />}
@@ -37,6 +40,7 @@ export function WeatherDashboard({
             onToggleUnit={onToggleUnit}
           />
         )}
+        {airPollution && <AirQualityCard data={airPollution} />}
         {forecast && <TemperatureChart data={forecast.list} unit={unit} />}
       </div>
     );

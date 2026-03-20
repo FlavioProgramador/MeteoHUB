@@ -59,6 +59,18 @@ export async function getForecastByCoordinates(lat: number, lon: number, unit: '
     }
 }
 
+export async function getAirPollutionByCoordinates(lat: number, lon: number) {
+    try {
+        const response = await api.get("/data/2.5/air_pollution", {
+            params: { lat, lon }
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Erro ao buscar dados de poluição do ar:", error);
+        throw error;
+    }
+}
+
 export async function getCitySuggestions(query: string) {
     try {
         const response = await api.get("/geo/1.0/direct", {

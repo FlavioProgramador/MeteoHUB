@@ -35,6 +35,7 @@ function App() {
   const {
     weather,
     forecast,
+    airPollution,
     loading,
     error,
     fetchWeatherByCity,
@@ -68,6 +69,13 @@ function App() {
         fetchWeatherByCoords(lat, lon, handleSearchSuccess),
       onError: setError,
     });
+  };
+
+  const handleToggleUnit = () => {
+    setUnit((prev) => (prev === "metric" ? "imperial" : "metric"));
+    if (weather) {
+      fetchWeatherByCity(weather.name);
+    }
   };
 
   return (
@@ -123,10 +131,11 @@ function App() {
       <WeatherDashboard
         weather={weather}
         forecast={forecast}
+        airPollution={airPollution}
         unit={unit}
         loading={loading}
         error={error}
-        onToggleUnit={() => setUnit(unit === "metric" ? "imperial" : "metric")}
+        onToggleUnit={handleToggleUnit}
       />
 
       <div className="bottomActions">

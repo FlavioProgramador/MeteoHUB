@@ -1,0 +1,87 @@
+.airQualityCard {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 12px var(--shadow-color);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 20px;
+  color: var(--text-color);
+  transition: all 0.3s ease;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: center;
+}
+
+.aqiBadge {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 16px 24px;
+  border-radius: 12px;
+  min-width: 140px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.aqiBadge span {
+  font-size: 1rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.aqiBadge strong {
+  font-size: 1.8rem;
+  margin-top: 4px;
+}
+
+.componentsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+  gap: 12px;
+  flex: 1;
+}
+
+.componentItem {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-color);
+  padding: 12px;
+  border-radius: 8px;
+  text-align: center;
+  border: 1px solid var(--border-color);
+}
+
+.componentItem span {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary, #666);
+  margin-bottom: 6px;
+}
+
+.componentItem strong {
+  font-size: 1.1rem;
+  color: var(--text-color);
+}
+
+.componentItem small {
+  font-size: 0.7rem;
+  opacity: 0.7;
+}
+
+:global([data-theme='dark']) .componentItem span {
+  color: #ccc;
+}
