@@ -48,10 +48,10 @@ function createSnowflake(w: number): Particle {
   return {
     x: rand(0, w),
     y: rand(-80, 0),
-    vx: rand(-0.8, 0.8),
-    vy: rand(0.8, 2.8),
-    size: rand(3, 7),
-    alpha: rand(0.7, 1),
+    vx: rand(-0.5, 0.5),
+    vy: rand(0.6, 1.8),
+    size: rand(2, 5),
+    alpha: rand(0.4, 0.7),
     color: "#eaf4ff",
   };
 }
@@ -239,7 +239,7 @@ function drawThunder(
 const PARTICLE_COUNT: Record<string, number> = {
   Rain: 220,
   Drizzle: 110,
-  Snow: 150,
+  Snow: 90,
   Thunderstorm: 260,
   Clear: 100,
   Clouds: 28,
