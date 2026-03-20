@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 import type { WeatherData } from "./Types/weather";
-import { getWeatherByAPI, getWeatherByCoordinates } from "./Services/api";
+import { getWeatherByAPI, getWeatherByCoordinates, getForecastByAPI, getForecastByCoordinates } from "./Services/api";
+import type { ForecastData } from "./Types/forecast";
 import WeatherCard from "./Components/WeatherCard/WeatherCard";
+import TemperatureChart from "./Components/TemperatureChart/TemperatureChart";
 import EmptyState from "./Components/EmptyState/EmptyState";
 import { Search, Moon, Sun, CloudSun } from "lucide-react";
 
 function App() {
   const [city, setCity] = useState("");
   const [weather, setWeather] = useState<WeatherData | null>(null);
+  const [forecast, setForecast] = useState<ForecastData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [theme, setTheme] = useState<"light" | "dark">("light");
@@ -47,10 +50,13 @@ function App() {
 
     try {
       const data = await getWeatherByAPI(cidadeDigitada);
+      const forecastData = await getForecastByAPI(cidadeDigitada);
       setWeather(data);
+      setForecast(forecastData);
     } catch (err) {
       setError("Erro ao buscar dados da API. Tem certeza de que a cidade " + cidadeDigitada + " existe?");
       setWeather(null);
+      setForecast(null);
     } finally {
       setLoading(false);
     }
@@ -70,11 +76,14 @@ function App() {
         try {
           const { latitude, longitude } = position.coords;
           const data = await getWeatherByCoordinates(latitude, longitude);
+          const forecastData = await getForecastByCoordinates(latitude, longitude);
           setWeather(data);
+          setForecast(forecastData);
           setCity(data.name); 
         } catch (err) {
           setError("Erro ao buscar dados de clima da sua localização atual.");
           setWeather(null);
+          setForecast(null);
         } finally {
           setLoading(false);
         }
@@ -115,9 +124,14 @@ function App() {
 
       {error && <p className="errorMessage">{error}</p>}
 
-      <div className="content-wrapper">
-        {weather ? <WeatherCard weather={weather} /> : <EmptyState />}
-      </div>
+      {weather || forecast ? (
+        <div className="cardsContainer">
+          {weather && <WeatherCard weather={weather} />}
+          {forecast && <TemperatureChart data={forecast.list} />}
+        </div>
+      ) : (
+        <EmptyState />
+      )}
 
       <button className="themeToggle" onClick={toggleTheme} aria-label="Alterar Tema">
         {theme === "light" ? (

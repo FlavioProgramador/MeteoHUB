@@ -26,4 +26,26 @@ async function getWeatherByCoordinates(lat: number, lon: number) {
     }
 }
 
-export { getWeatherByAPI, getWeatherByCoordinates }
+const FORECAST_URL = "https://api.openweathermap.org/data/2.5/forecast";
+
+async function getForecastByAPI(city: string) {
+    try {
+        const response = await axios.get(`${FORECAST_URL}?q=${city}&appid=${API_KEY}&units=metric&lang=pt_br`);
+        return response.data;
+    } catch (error) {
+        console.error("Erro ao buscar dados de forecast da API:", error);
+        throw error;
+    }
+}
+
+async function getForecastByCoordinates(lat: number, lon: number) {
+    try {
+        const response = await axios.get(`${FORECAST_URL}?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&lang=pt_br`);
+        return response.data;
+    } catch (error) {
+        console.error("Erro ao buscar dados de forecast por coordenadas:", error);
+        throw error;
+    }
+}
+
+export { getWeatherByAPI, getWeatherByCoordinates, getForecastByAPI, getForecastByCoordinates }
