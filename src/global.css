@@ -44,9 +44,59 @@
   --card-border: rgba(255, 255, 255, 0.1);
   --card-shadow: 0 12px 40px -10px rgba(0, 0, 0, 0.6);
 
-  /* Botões e Input */
+/* Botões e Input */
   --input-bg: #1e293b;
   --input-border: #60a5fa;
+}
+
+/* --- ESTILOS DINÂMICOS BASEADOS NO CLIMA --- */
+
+/* ENSOLARADO (Clear) */
+[data-theme="light"][data-weather="clear"] {
+  --bg-gradient-start: #fef08a; /* Amarelo bem suave */
+  --bg-gradient-end: #bfdbfe;   /* Azul céu claro */
+}
+
+[data-theme="dark"][data-weather="clear"] {
+  --bg-gradient-start: #1e3a8a; 
+  --bg-gradient-end: #854d0e;   
+}
+
+/* NUBLADO (Clouds) */
+[data-theme="light"][data-weather="clouds"] {
+  --bg-gradient-start: #e2e8f0; 
+  --bg-gradient-end: #94a3b8;   
+}
+
+[data-theme="dark"][data-weather="clouds"] {
+  --bg-gradient-start: #0f172a; 
+  --bg-gradient-end: #334155;   
+}
+
+/* CHUVA (Rain / Drizzle / Thunderstorm) */
+[data-theme="light"][data-weather="rain"],
+[data-theme="light"][data-weather="drizzle"],
+[data-theme="light"][data-weather="thunderstorm"] {
+  --bg-gradient-start: #64748b; 
+  --bg-gradient-end: #3b82f6;   
+}
+
+[data-theme="dark"][data-weather="rain"],
+[data-theme="dark"][data-weather="drizzle"],
+[data-theme="dark"][data-weather="thunderstorm"] {
+  --bg-gradient-start: #020617; 
+  --bg-gradient-end: #1e3a8a;   
+}
+
+/* NEVE (Snow) */
+[data-theme="light"][data-weather="snow"] {
+  --bg-gradient-start: #f1f5f9; 
+  --bg-gradient-end: #e0f2fe;   
+}
+
+[data-theme="dark"][data-weather="snow"] {
+  --bg-gradient-start: #0f172a; 
+  --bg-gradient-end: #bae6fd;   
 }
 
 body {

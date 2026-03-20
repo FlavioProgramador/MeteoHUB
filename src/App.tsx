@@ -26,6 +26,15 @@ function App() {
     }
   }, []);
 
+  useEffect(() => {
+    if (weather && weather.weather && weather.weather.length > 0) {
+      const condition = weather.weather[0].main.toLowerCase();
+      document.documentElement.setAttribute("data-weather", condition);
+    } else {
+      document.documentElement.removeAttribute("data-weather");
+    }
+  }, [weather]);
+
   async function handleSearch(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
