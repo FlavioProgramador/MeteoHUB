@@ -61,3 +61,12 @@
 :global([data-theme='dark']) .timeLabel {
   color: #ccc;
 }
+
+@media (max-width: 480px) {
+  .sunCard {
+    padding: 16px;
+  }
+  .svgArc {
+    max-width: 220px;
+  }
+}

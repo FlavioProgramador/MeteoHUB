@@ -60,3 +60,16 @@
 :global([data-theme='dark']) .description {
   color: #ccc;
 }
+
+@media (max-width: 480px) {
+  .moonCard {
+    padding: 16px;
+  }
+  .phaseName {
+    font-size: 1.3rem;
+  }
+  .iconWrapper svg {
+    width: 40px;
+    height: 40px;
+  }
+}

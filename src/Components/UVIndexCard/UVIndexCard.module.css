@@ -92,3 +92,14 @@
 :global([data-theme='dark']) .info p {
   color: #ccc;
 }
+
+@media (max-width: 480px) {
+  .uvCard {
+    padding: 16px;
+  }
+  .content {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+  }
+}

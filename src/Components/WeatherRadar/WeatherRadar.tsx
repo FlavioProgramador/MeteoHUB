@@ -42,7 +42,7 @@ export const WeatherRadar = ({ weather }: WeatherRadarProps) => {
       <header className={styles.header}>
         <div className={styles.headerLeft}>
           <MapIcon size={20} className={styles.icon} />
-          <h3 className={styles.title} style={{ display: 'flex', alignItems: 'center' }}>
+          <h3 className={styles.title} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             Radar Climático
             <InfoTooltip content="O radar exibe visualmente as condições climáticas atuais, como nuvens e precipitação, sobre o mapa." />
           </h3>

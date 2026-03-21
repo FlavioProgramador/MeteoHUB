@@ -17,6 +17,10 @@
   .gridContainer {
     grid-template-columns: repeat(2, 1fr);
   }
+  
+  .airQualityWrapper {
+    grid-column: span 2;
+  }
 }
 
 @media (min-width: 1024px) {
