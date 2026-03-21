@@ -12,14 +12,11 @@ import L from "leaflet";
 import type { WeatherData } from "../../Types/weather";
 import styles from "./WeatherRadar.module.css";
 import { CloudRain, Map as MapIcon, Layers } from "lucide-react";
-import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
-import markerIcon from "leaflet/dist/images/marker-icon.png";
-import markerShadow from "leaflet/dist/images/marker-shadow.png";
-
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: markerIcon2x,
-  iconUrl: markerIcon,
-  shadowUrl: markerShadow,
+const customIcon = L.divIcon({
+  html: `<div style="background-color: #3b82f6; width: 18px; height: 18px; border-radius: 50%; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.4); border: 2px solid white;"></div>`,
+  className: '',
+  iconSize: [18, 18],
+  iconAnchor: [9, 9],
 });
 
 interface WeatherRadarProps {
@@ -90,7 +87,7 @@ export const WeatherRadar = ({ weather }: WeatherRadarProps) => {
               />
             </LayersControl.Overlay>
           </LayersControl>
-          <Marker position={position} />
+          <Marker position={position} icon={customIcon} />
         </MapContainer>
       </div>
     </div>

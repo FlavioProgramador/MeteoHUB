@@ -59,7 +59,7 @@ export function WeatherDashboard({
   if (weather || forecast || airPollution || uvIndex) {
     return (
       <motion.div 
-        className="cardsContainer"
+        className={styles.cardsContainer}
         variants={containerVariants}
         initial="hidden"
         animate="visible"
