@@ -67,6 +67,18 @@ export async function getAirPollutionByCoordinates(lat: number, lon: number) {
         return response.data;
     } catch (error) {
         console.error("Erro ao buscar dados de poluição do ar:", error);
+        throw error; // Let the caller handle it or gracefully degrade
+    }
+}
+
+export async function getUVIndexByCoordinates(lat: number, lon: number) {
+    try {
+        const response = await api.get("/data/2.5/uvi", {
+            params: { lat, lon }
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Erro ao buscar dados de UV:", error);
         throw error;
     }
 }

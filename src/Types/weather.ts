@@ -52,3 +52,11 @@ export interface AirPollutionData {
     dt: number;
   }[];
 }
+
+export interface UVIndexData {
+  lat: number;
+  lon: number;
+  date_iso: string;
+  date: number;
+  value: number;
+}

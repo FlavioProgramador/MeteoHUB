@@ -36,6 +36,7 @@ function App() {
     weather,
     forecast,
     airPollution,
+    uvIndex,
     loading,
     error,
     fetchWeatherByCity,
@@ -132,6 +133,7 @@ function App() {
         weather={weather}
         forecast={forecast}
         airPollution={airPollution}
+        uvIndex={uvIndex}
         unit={unit}
         loading={loading}
         error={error}

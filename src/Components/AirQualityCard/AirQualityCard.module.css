@@ -1,21 +1,29 @@
 .airQualityCard {
-  background-color: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 4px 12px var(--shadow-color);
+  background: var(--card-bg-glass);
+  border: 1.5px solid var(--card-border);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: var(--card-shadow);
+  color: var(--text-color);
+  transition: var(--transition);
+  flex: 1;
+  min-width: 250px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  margin-top: 20px;
-  color: var(--text-color);
-  transition: all 0.3s ease;
 }
 
 .title {
-  margin: 0;
+  margin: 0 0 20px 0;
   font-size: 1.2rem;
   font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.icon {
+  color: #90A4AE;
 }
 
 .content {
@@ -58,11 +66,17 @@
 .componentItem {
   display: flex;
   flex-direction: column;
-  background-color: var(--bg-color);
-  padding: 12px;
-  border-radius: 8px;
+  background-color: rgba(148, 163, 184, 0.1);
+  padding: 16px 12px;
+  border-radius: 12px;
   text-align: center;
-  border: 1px solid var(--border-color);
+  border: 1.5px solid rgba(148, 163, 184, 0.2);
+  transition: all 0.3s ease;
+}
+
+.componentItem:hover {
+  transform: translateY(-2px);
+  background-color: rgba(148, 163, 184, 0.2);
 }
 
 .componentItem span {

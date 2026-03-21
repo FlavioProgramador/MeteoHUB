@@ -1,5 +1,6 @@
 import type { AirPollutionData } from "../../Types/weather";
 import styles from "./AirQualityCard.module.css";
+import { FiWind } from "react-icons/fi";
 
 interface AirQualityCardProps {
   data: AirPollutionData;
@@ -21,7 +22,9 @@ export function AirQualityCard({ data }: AirQualityCardProps) {
 
   return (
     <div className={styles.airQualityCard}>
-      <h3 className={styles.title}>Qualidade do Ar</h3>
+      <h3 className={styles.title}>
+        <FiWind className={styles.icon} /> Qualidade do Ar
+      </h3>
       <div className={styles.content}>
         <div className={styles.aqiBadge} style={{ backgroundColor: aqiInfo.color, color: aqiInfo.textColor }}>
           <span>{aqiInfo.label}</span>

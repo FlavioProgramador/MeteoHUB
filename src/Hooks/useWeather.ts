@@ -1,12 +1,13 @@
 import { useState } from 'react';
-import type { WeatherData, AirPollutionData } from '../Types/weather';
+import type { WeatherData, AirPollutionData, UVIndexData } from '../Types/weather';
 import type { ForecastData } from '../Types/forecast';
-import { getWeatherByAPI, getWeatherByCoordinates, getForecastByAPI, getForecastByCoordinates, getAirPollutionByCoordinates } from '../Services/api';
+import { getWeatherByAPI, getWeatherByCoordinates, getForecastByAPI, getForecastByCoordinates, getAirPollutionByCoordinates, getUVIndexByCoordinates } from '../Services/api';
 
 export function useWeather(unit: 'metric' | 'imperial') {
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [forecast, setForecast] = useState<ForecastData | null>(null);
   const [airPollution, setAirPollution] = useState<AirPollutionData | null>(null);
+  const [uvIndex, setUvIndex] = useState<UVIndexData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -19,15 +20,22 @@ export function useWeather(unit: 'metric' | 'imperial') {
       const forecastData = await getForecastByAPI(city, unit);
       
       let pollutionData = null;
+      let uvData = null;
       try {
         pollutionData = await getAirPollutionByCoordinates(data.coord.lat, data.coord.lon);
       } catch (e) {
         console.warn("Could not fetch air pollution data.");
       }
+      try {
+        uvData = await getUVIndexByCoordinates(data.coord.lat, data.coord.lon);
+      } catch (e) {
+        console.warn("Could not fetch UV index data.");
+      }
 
       setWeather(data);
       setForecast(forecastData);
       setAirPollution(pollutionData);
+      setUvIndex(uvData);
 
       if (onSuccess) onSuccess(data.name);
     } catch (err) {
@@ -35,6 +43,7 @@ export function useWeather(unit: 'metric' | 'imperial') {
       setWeather(null);
       setForecast(null);
       setAirPollution(null);
+      setUvIndex(null);
     } finally {
       setLoading(false);
     }
@@ -48,15 +57,22 @@ export function useWeather(unit: 'metric' | 'imperial') {
       const forecastData = await getForecastByCoordinates(lat, lon, unit);
       
       let pollutionData = null;
+      let uvData = null;
       try {
         pollutionData = await getAirPollutionByCoordinates(lat, lon);
       } catch (e) {
         console.warn("Could not fetch air pollution data.");
       }
+      try {
+        uvData = await getUVIndexByCoordinates(lat, lon);
+      } catch (e) {
+        console.warn("Could not fetch UV index data.");
+      }
 
       setWeather(data);
       setForecast(forecastData);
       setAirPollution(pollutionData);
+      setUvIndex(uvData);
 
       if (onSuccess) onSuccess(data.name);
     } catch (err) {
@@ -64,6 +80,7 @@ export function useWeather(unit: 'metric' | 'imperial') {
       setWeather(null);
       setForecast(null);
       setAirPollution(null);
+      setUvIndex(null);
     } finally {
       setLoading(false);
     }
@@ -73,6 +90,7 @@ export function useWeather(unit: 'metric' | 'imperial') {
     weather, 
     forecast, 
     airPollution,
+    uvIndex,
     loading, 
     error, 
     fetchWeatherByCity, 
