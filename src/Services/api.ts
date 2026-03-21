@@ -11,86 +11,44 @@ const api = axios.create({
     }
 });
 
-export async function getWeatherByAPI(city: string, unit: 'metric' | 'imperial' = 'metric') {
+async function fetchFromApi<T>(url: string, params: object, errorMsg: string): Promise<T> {
     try {
-        const response = await api.get<WeatherData>("/data/2.5/weather", {
-            params: { q: city, units: unit }
-        });
+        const response = await api.get<T>(url, { params });
         return response.data;
     } catch (error) {
-        console.error("Erro ao buscar dados da API:", error);
+        console.error(errorMsg, error);
         throw error;
     }
 }
 
-export async function getWeatherByCoordinates(lat: number, lon: number, unit: 'metric' | 'imperial' = 'metric') {
-    try {
-        const response = await api.get<WeatherData>("/data/2.5/weather", {
-            params: { lat, lon, units: unit }
-        });
-        return response.data;
-    } catch (error) {
-        console.error("Erro ao buscar dados da API por coordenadas:", error);
-        throw error;
-    }
+export function getWeatherByAPI(city: string, unit: 'metric' | 'imperial' = 'metric') {
+    return fetchFromApi<WeatherData>("/data/2.5/weather", { q: city, units: unit }, "Erro ao buscar dados da API:");
 }
 
-export async function getForecastByAPI(city: string, unit: 'metric' | 'imperial' = 'metric') {
-    try {
-        const response = await api.get("/data/2.5/forecast", {
-            params: { q: city, units: unit }
-        });
-        return response.data;
-    } catch (error) {
-        console.error("Erro ao buscar dados de forecast da API:", error);
-        throw error;
-    }
+export function getWeatherByCoordinates(lat: number, lon: number, unit: 'metric' | 'imperial' = 'metric') {
+    return fetchFromApi<WeatherData>("/data/2.5/weather", { lat, lon, units: unit }, "Erro ao buscar dados da API por coordenadas:");
 }
 
-export async function getForecastByCoordinates(lat: number, lon: number, unit: 'metric' | 'imperial' = 'metric') {
-    try {
-        const response = await api.get("/data/2.5/forecast", {
-            params: { lat, lon, units: unit }
-        });
-        return response.data;
-    } catch (error) {
-        console.error("Erro ao buscar dados de forecast por coordenadas:", error);
-        throw error;
-    }
+export function getForecastByAPI(city: string, unit: 'metric' | 'imperial' = 'metric') {
+    return fetchFromApi<unknown>("/data/2.5/forecast", { q: city, units: unit }, "Erro ao buscar dados de forecast da API:");
 }
 
-export async function getAirPollutionByCoordinates(lat: number, lon: number) {
-    try {
-        const response = await api.get("/data/2.5/air_pollution", {
-            params: { lat, lon }
-        });
-        return response.data;
-    } catch (error) {
-        console.error("Erro ao buscar dados de poluição do ar:", error);
-        throw error; // Let the caller handle it or gracefully degrade
-    }
+export function getForecastByCoordinates(lat: number, lon: number, unit: 'metric' | 'imperial' = 'metric') {
+    return fetchFromApi<unknown>("/data/2.5/forecast", { lat, lon, units: unit }, "Erro ao buscar dados de forecast por coordenadas:");
 }
 
-export async function getUVIndexByCoordinates(lat: number, lon: number) {
-    try {
-        const response = await api.get("/data/2.5/uvi", {
-            params: { lat, lon }
-        });
-        return response.data;
-    } catch (error) {
-        console.error("Erro ao buscar dados de UV:", error);
-        throw error;
-    }
+export function getAirPollutionByCoordinates(lat: number, lon: number) {
+    return fetchFromApi<unknown>("/data/2.5/air_pollution", { lat, lon }, "Erro ao buscar dados de poluição do ar:");
+}
+
+export function getUVIndexByCoordinates(lat: number, lon: number) {
+    return fetchFromApi<unknown>("/data/2.5/uvi", { lat, lon }, "Erro ao buscar dados de UV:");
 }
 
 export async function getCitySuggestions(query: string) {
     try {
-        const response = await api.get("/geo/1.0/direct", {
-            params: { q: query, limit: 5 }
-        });
-        return response.data;
-    } catch (error) {
-        console.error("Erro ao buscar sugestões de cidades:", error);
+        return await fetchFromApi<unknown[]>("/geo/1.0/direct", { q: query, limit: 5 }, "Erro ao buscar sugestões de cidades:");
+    } catch {
         return [];
     }
 }

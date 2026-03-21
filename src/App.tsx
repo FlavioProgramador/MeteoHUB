@@ -11,20 +11,16 @@ import { useTheme } from "./Hooks/useTheme";
 import { useGeolocation } from "./Hooks/useGeolocation";
 
 import { Header } from "./Components/Header/Header";
-import { SearchBar } from "./Components/SearchBar/SearchBar";
-import { FavoriteCities } from "./Components/FavoriteCities/FavoriteCities";
-import { SearchHistory } from "./Components/SearchHistory/SearchHistory";
+import { SearchPanel } from "./Components/SearchPanel/SearchPanel";
 import { ThemeToggle } from "./Components/ThemeToggle/ThemeToggle";
 import { WeatherBackground } from "./Components/WeatherBackground/WeatherBackground";
 import { WeatherDashboard } from "./Components/WeatherDashboard/WeatherDashboard";
-import { LocationButton } from "./Components/Buttons/LocationButton";
-import { FavoriteButton } from "./Components/Buttons/FavoriteButton";
 
 function App() {
   const [unit, setUnit] = useState<"metric" | "imperial">("metric");
   const [searchedCity, setSearchedCity] = useState("");
 
-  useTheme(); // Inicializa o listener de tema do sistema
+  useTheme(); 
 
   const { handleLocation } = useGeolocation();
 
@@ -85,49 +81,26 @@ function App() {
 
       <Header />
 
-      <div className="searchContainer">
-        <div className="searchRow">
-          <SearchBar
-            searchedCity={searchedCity}
-            loading={loading}
-            onSearch={(city: string) => fetchWeatherByCity(city, handleSearchSuccess)}
-            onSuggestionClick={(lat: number, lon: number) =>
-              fetchWeatherByCoords(lat, lon, handleSearchSuccess)
-            }
-          />
-
-          <LocationButton loading={loading} onClick={onLocationClick} />
-
-          {weather && (
-            <FavoriteButton
-              isFavorite={isFavorite(weather.name)}
-              onToggle={() =>
-                isFavorite(weather.name)
-                  ? removeFavorite(weather.name)
-                  : addFavorite(weather.name)
-              }
-            />
-          )}
-        </div>
-
-        <FavoriteCities
-          favorites={favorites}
-          currentCity={weather?.name ?? ""}
-          onSelect={(favCity: string) =>
-            fetchWeatherByCity(favCity, handleSearchSuccess)
-          }
-          onRemove={removeFavorite}
-        />
-
-        <SearchHistory
-          history={history}
-          onSelect={(histCity: string) =>
-            fetchWeatherByCity(histCity, handleSearchSuccess)
-          }
-          onRemove={removeFromHistory}
-          onClear={clearHistory}
-        />
-      </div>
+      <SearchPanel
+        searchedCity={searchedCity}
+        loading={loading}
+        weatherName={weather?.name}
+        favorites={favorites}
+        history={history}
+        isFavorite={isFavorite}
+        onSearch={(city: string) => fetchWeatherByCity(city, handleSearchSuccess)}
+        onSuggestionClick={(lat: number, lon: number) =>
+          fetchWeatherByCoords(lat, lon, handleSearchSuccess)
+        }
+        onLocationClick={onLocationClick}
+        onToggleFavorite={(city: string) =>
+          isFavorite(city) ? removeFavorite(city) : addFavorite(city)
+        }
+        onSelectCity={(city: string) => fetchWeatherByCity(city, handleSearchSuccess)}
+        onRemoveFavorite={removeFavorite}
+        onRemoveHistory={removeFromHistory}
+        onClearHistory={clearHistory}
+      />
 
       <WeatherDashboard
         weather={weather}

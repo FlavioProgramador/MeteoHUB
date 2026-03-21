@@ -11,31 +11,36 @@ export function useWeather(unit: 'metric' | 'imperial') {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const fetchExtraContext = async (lat: number, lon: number) => {
+    let pollutionData = null;
+    let uvData = null;
+    try {
+      pollutionData = await getAirPollutionByCoordinates(lat, lon);
+    } catch (e) {
+      console.warn("Could not fetch air pollution data.");
+    }
+    try {
+      uvData = await getUVIndexByCoordinates(lat, lon);
+    } catch (e) {
+      console.warn("Could not fetch UV index data.");
+    }
+    return { pollutionData, uvData };
+  };
+
   const fetchWeatherByCity = async (city: string, onSuccess?: (cityName: string) => void) => {
     if (!city || !city.trim()) return;
     setLoading(true);
     setError(null);
     try {
       const data = await getWeatherByAPI(city, unit);
-      const forecastData = await getForecastByAPI(city, unit);
+      const forecastData = await getForecastByAPI(city, unit) as ForecastData;
       
-      let pollutionData = null;
-      let uvData = null;
-      try {
-        pollutionData = await getAirPollutionByCoordinates(data.coord.lat, data.coord.lon);
-      } catch (e) {
-        console.warn("Could not fetch air pollution data.");
-      }
-      try {
-        uvData = await getUVIndexByCoordinates(data.coord.lat, data.coord.lon);
-      } catch (e) {
-        console.warn("Could not fetch UV index data.");
-      }
+      const { pollutionData, uvData } = await fetchExtraContext(data.coord.lat, data.coord.lon);
 
       setWeather(data);
       setForecast(forecastData);
-      setAirPollution(pollutionData);
-      setUvIndex(uvData);
+      setAirPollution(pollutionData as AirPollutionData | null);
+      setUvIndex(uvData as UVIndexData | null);
 
       if (onSuccess) onSuccess(data.name);
     } catch (err) {
@@ -54,25 +59,14 @@ export function useWeather(unit: 'metric' | 'imperial') {
     setError(null);
     try {
       const data = await getWeatherByCoordinates(lat, lon, unit);
-      const forecastData = await getForecastByCoordinates(lat, lon, unit);
+      const forecastData = await getForecastByCoordinates(lat, lon, unit) as ForecastData;
       
-      let pollutionData = null;
-      let uvData = null;
-      try {
-        pollutionData = await getAirPollutionByCoordinates(lat, lon);
-      } catch (e) {
-        console.warn("Could not fetch air pollution data.");
-      }
-      try {
-        uvData = await getUVIndexByCoordinates(lat, lon);
-      } catch (e) {
-        console.warn("Could not fetch UV index data.");
-      }
+      const { pollutionData, uvData } = await fetchExtraContext(lat, lon);
 
       setWeather(data);
       setForecast(forecastData);
-      setAirPollution(pollutionData);
-      setUvIndex(uvData);
+      setAirPollution(pollutionData as AirPollutionData | null);
+      setUvIndex(uvData as UVIndexData | null);
 
       if (onSuccess) onSuccess(data.name);
     } catch (err) {

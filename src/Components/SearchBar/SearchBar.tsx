@@ -35,7 +35,7 @@ export const SearchBar = ({ onSearch, onSuggestionClick, loading, searchedCity }
     }
     if (searchTerm.trim().length > 2) {
       const delayDebounceFn = setTimeout(async () => {
-        const data = await getCitySuggestions(searchTerm);
+        const data = (await getCitySuggestions(searchTerm)) as CitySuggestion[];
         
         // Remove cidades duplicadas retornadas pela API filtrando pelo nome e estado
         const uniqueData = data.filter((v: CitySuggestion, i: number, a: CitySuggestion[]) => 
