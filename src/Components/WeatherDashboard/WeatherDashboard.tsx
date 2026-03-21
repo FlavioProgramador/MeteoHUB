@@ -10,6 +10,26 @@ import { MoonPhaseCard } from "../MoonPhaseCard/MoonPhaseCard";
 import { WeatherRadar } from "../WeatherRadar/WeatherRadar";
 import EmptyState from "../EmptyState/EmptyState";
 import styles from "./WeatherDashboard.module.css";
+import { motion } from "framer-motion";
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: { duration: 0.4, ease: "easeOut" as const }
+  }
+};
 
 interface WeatherDashboardProps {
   weather: WeatherData | null;
@@ -38,16 +58,29 @@ export function WeatherDashboard({
 
   if (weather || forecast || airPollution || uvIndex) {
     return (
-      <div className="cardsContainer">
-        {weather && <WeatherAlert weather={weather} unit={unit} />}
+      <motion.div 
+        className="cardsContainer"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
         {weather && (
-          <WeatherCard
-            weather={weather}
-            unit={unit}
-            onToggleUnit={onToggleUnit}
-          />
+          <motion.div variants={itemVariants}>
+            <WeatherAlert weather={weather} unit={unit} />
+          </motion.div>
         )}
-        <div className={styles.gridContainer}>
+        
+        {weather && (
+          <motion.div variants={itemVariants}>
+            <WeatherCard
+              weather={weather}
+              unit={unit}
+              onToggleUnit={onToggleUnit}
+            />
+          </motion.div>
+        )}
+
+        <motion.div className={styles.gridContainer} variants={itemVariants}>
           {weather && (
             <div className={styles.sunArcWrapper}>
               <SunArcCard weather={weather} />
@@ -69,12 +102,20 @@ export function WeatherDashboard({
               <AirQualityCard data={airPollution} />
             </div>
           )}
-        </div>
+        </motion.div>
         
-        {weather && <WeatherRadar weather={weather} />}
+        {weather && (
+          <motion.div variants={itemVariants}>
+            <WeatherRadar weather={weather} />
+          </motion.div>
+        )}
         
-        {forecast && <TemperatureChart data={forecast.list} unit={unit} />}
-      </div>
+        {forecast && (
+          <motion.div variants={itemVariants}>
+            <TemperatureChart data={forecast.list} unit={unit} />
+          </motion.div>
+        )}
+      </motion.div>
     );
   }
 
