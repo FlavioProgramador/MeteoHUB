@@ -21,15 +21,16 @@ Consome instantaneamente a API do **OpenWeatherMap**, detalhando clima do moment
 
 ## 🚀 Principais Features 
 
-*   **🌍 Busca Inteligente com Autocomplete:** Sugestões e históricos no clique, com suporte imediato para localizações e nomes mundiais precisos.
-*   **📍 Localização Precisa via Satélite GPS:** Clique no botão de GPS e, com sua permissão, saiba as condições do lugar exato que  está no momento.
-*   **⭐ Favoritos em Cache (Local Storage):** Marque pelo botão em forma de estrela suas cidades prediletas e mude de um clima ao outro rapidamente, com persistência na memória.
-*   **🌗 Troca Dinâmica Light/Dark:** Tema integral do OS respeitado nativamente, além de Switch pelo botão "Mudar Tema". As transparências e as fontes reagem pixel for pixel.
-*   **💧 Interface Glassmorphism Pura:** Nada de interfaces "chapadas" - Os cartões absorvem as texturas e iluminação do background lindamente.
-*   **☁️ Contexto Dinâmico de Backgrounds:** Inverno em Paris? Nevasca no app. Verão no Rio de Janeiro? Dia claro na UI. Detecta e reage em cascata de visuais maravilhosos (Clean e Não Intrusivos).
-*   **🌡️ Radar Detalhado de Dados Múltiplos:** Sensação Térmica em decimal, Índice UV, Velocidade e Direção (°) dos Ventos, Visibilidade e o importante Índice AQI (Qualidade Global do Ar).
-*   **📉 Previsão Avançada e Gráficos:** Modelos descritivos a cada bloco de três horas que duram pelos próximos cinco dias.
-*   **🚨 Sistema de Alertas Governamental (Weather Alerts):** Quando os serviços meteorológicos governamentais lançarem alertas (Enchentes, Furacões etc), o MeteoHub exibirá cards urgentes traduzindo os eventos críticos para o usuário.
+*   **🌍 Busca Inteligente com Autocomplete:** Sugestões e históricos no clique, com suporte imediato para localizações.
+*   **📍 Localização Precisa via Satélite GPS:** Clique no botão de GPS e, com permissão, saiba as condições exatas da sua região.
+*   **⭐ Favoritos Persistidos (Custom Hooks):** Gerenciamento de estado elegante com nosso hook genérico `useLocalStorage`, garantindo salvamento em cache otimizado.
+*   **🌗 Troca Dinâmica Light/Dark:** Tema integral respeitado nativamente, além de Switch. Transparências e fontes reagem pixel for pixel.
+*   **💧 Interface Glassmorphism Pura:** Nada de interfaces "chapadas" - Os cartões absorvem as texturas e iluminação do background.
+*   **☁️ Contexto Dinâmico de Backgrounds:** Inverno em Paris? Nevasca no app. Verão no Rio? Dia claro na UI. Detecta e reage em cascata.
+*   **🗺️ Radar Climático Interativo:** Integrado com `React Leaflet`, apresenta um mapa global navegável com camadas ricas de Precipitação e Nuvens em tempo real.
+*   **🌖 Astronomia Detalhada:** Novos cartões SVG reativos acompanham o Arco do Sol e as Fases da Lua baseados no horário do local pesquisado.
+*   **📱 Design 100% Responsivo e Fluído:** Refatoração exaustiva com CSS Grid e Flexbox garantindo perfeição em celulares, tablets e desktops (PWA-Ready).
+*   **🚨 Sistema de Alertas Governamental (Weather Alerts):** Exibe avisos críticos emitidos por agências climáticas oficiais (Enchentes, Furacões etc).
 
 ## 🛠️ Stack Tecnológico
 
@@ -37,7 +38,8 @@ A regra era clara: **Sem frameworks UI pesados** (Tailwind substituído pelo pod
 
 *   **Linguagens:** `TypeScript`, `TSX`, `Vanilla CSS`
 *   **Ferramentas Base:** `React 18`, `Vite`
-*   **Requisições Assíncronas:** `Axios`
+*   **Mapas e Gráficos:** `Recharts`, `React Leaflet (Radar)`
+*   **Requisições Assíncronas:** `Axios` (com Data Layer centralizada)
 *   **Elementos Visuais:** `Lucide React (Ícones)`, `Google Fonts (Inter / Outfit)`
 
 ## 💻 Como Rodar na sua Máquina
