@@ -1,0 +1,96 @@
+.radarCard {
+  background: var(--card-bg);
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: var(--card-shadow);
+  color: var(--text-color);
+  transition: var(--transition);
+  display: flex;
+  flex-direction: column;
+  height: 400px; /* Largura e altura bem delimitadas para o mapa não quebrar ou sumir */
+  overflow: hidden;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  flex-shrink: 0;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.icon {
+  color: var(--primary-color);
+  opacity: 0.9;
+}
+
+.title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-color);
+  opacity: 0.9;
+}
+
+.layerInfo {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  opacity: 0.7;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.3rem 0.6rem;
+  border-radius: 12px;
+}
+
+.mapContainer {
+  flex: 1;
+  border-radius: 14px;
+  overflow: hidden;
+  position: relative;
+  /* Isso previne do mapa transbordar em Safari/Webkit */
+  isolation: isolate;
+  z-index: 1;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.map {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* Corrige cores caso o tema seja escuro, pois os popups e controles do Leaflet são brancos por padrão */
+:global(.leaflet-container) {
+  font-family: inherit;
+}
+
+:global(.leaflet-control-layers) {
+  background: var(--card-bg) !important;
+  color: var(--text-color) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 8px !important;
+}
+
+:global(.leaflet-control-zoom) {
+  border: none !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+:global(.leaflet-control-zoom a) {
+  background: var(--card-bg) !important;
+  color: var(--text-color) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+:global(.leaflet-control-zoom a:hover) {
+  background: var(--primary-color) !important;
+  color: white !important;
+}

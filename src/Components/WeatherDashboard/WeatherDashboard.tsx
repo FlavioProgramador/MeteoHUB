@@ -7,6 +7,7 @@ import { AirQualityCard } from "../AirQualityCard/AirQualityCard";
 import { UVIndexCard } from "../UVIndexCard/UVIndexCard";
 import { SunArcCard } from "../SunArcCard/SunArcCard";
 import { MoonPhaseCard } from "../MoonPhaseCard/MoonPhaseCard";
+import { WeatherRadar } from "../WeatherRadar/WeatherRadar";
 import EmptyState from "../EmptyState/EmptyState";
 import styles from "./WeatherDashboard.module.css";
 
@@ -69,6 +70,9 @@ export function WeatherDashboard({
             </div>
           )}
         </div>
+        
+        {weather && <WeatherRadar weather={weather} />}
+        
         {forecast && <TemperatureChart data={forecast.list} unit={unit} />}
       </div>
     );
