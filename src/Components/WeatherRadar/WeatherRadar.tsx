@@ -31,6 +31,8 @@ function MapUpdater({ center }: { center: [number, number] }) {
   return null;
 }
 
+import { InfoTooltip } from "../InfoTooltip/InfoTooltip";
+
 export const WeatherRadar = ({ weather }: WeatherRadarProps) => {
   const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
   const position: [number, number] = [weather.coord.lat, weather.coord.lon];
@@ -40,7 +42,10 @@ export const WeatherRadar = ({ weather }: WeatherRadarProps) => {
       <header className={styles.header}>
         <div className={styles.headerLeft}>
           <MapIcon size={20} className={styles.icon} />
-          <h3 className={styles.title}>Radar Climático</h3>
+          <h3 className={styles.title} style={{ display: 'flex', alignItems: 'center' }}>
+            Radar Climático
+            <InfoTooltip content="O radar exibe visualmente as condições climáticas atuais, como nuvens e precipitação, sobre o mapa." />
+          </h3>
         </div>
         <div className={styles.layerInfo}>
           <Layers size={14} />

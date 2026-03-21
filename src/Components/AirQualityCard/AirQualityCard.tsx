@@ -14,6 +14,8 @@ const AQI_DICT: Record<number, { label: string; color: string; textColor: string
   5: { label: "Muito Ruim", color: "#F44336", textColor: "#fff" }, 
 };
 
+import { InfoTooltip } from "../InfoTooltip/InfoTooltip";
+
 export function AirQualityCard({ data }: AirQualityCardProps) {
   if (!data || !data.list || data.list.length === 0) return null;
 
@@ -22,9 +24,20 @@ export function AirQualityCard({ data }: AirQualityCardProps) {
 
   return (
     <div className={styles.airQualityCard}>
-      <h3 className={styles.title}>
-        <FiWind className={styles.icon} /> Qualidade do Ar
-      </h3>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', marginBottom: '16px' }}>
+        <h3 className={styles.title} style={{ margin: 0 }}>
+          <FiWind className={styles.icon} /> Qualidade do Ar
+        </h3>
+        <InfoTooltip content={
+          <>
+            <strong>AQI:</strong> Índice de Qualidade do Ar<br/>
+            <strong>PM2.5:</strong> Partículas finas<br/>
+            <strong>PM10:</strong> Partículas inaláveis<br/>
+            <strong>O³:</strong> Ozônio<br/>
+            <strong>NO²:</strong> Dióxido de nitrogênio
+          </>
+        } />
+      </div>
       <div className={styles.content}>
         <div className={styles.aqiBadge} style={{ backgroundColor: aqiInfo.color, color: aqiInfo.textColor }}>
           <span>{aqiInfo.label}</span>

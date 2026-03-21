@@ -15,6 +15,8 @@ interface TemperatureChartProps {
   unit: "metric" | "imperial";
 }
 
+import { InfoTooltip } from "../InfoTooltip/InfoTooltip";
+
 const TemperatureChart = ({ data, unit }: TemperatureChartProps) => {
   if (!data || data.length === 0) return null;
   const next24Hours = data.slice(0, 8).map((item) => {
@@ -32,7 +34,10 @@ const TemperatureChart = ({ data, unit }: TemperatureChartProps) => {
 
   return (
     <div className={styles.chartContainer}>
-      <h3 className={styles.title}>Previsão (Próximas 24h)</h3>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', marginBottom: '16px' }}>
+        <h3 className={styles.title} style={{ margin: 0 }}>Previsão (Próximas 24h)</h3>
+        <InfoTooltip content="Gráfico exibindo a variação prevista da temperatura para as próximas 24 horas." />
+      </div>
       <div className={styles.chartWrapper}>
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart
