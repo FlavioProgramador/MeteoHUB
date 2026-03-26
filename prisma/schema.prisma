@@ -1,0 +1,71 @@
+// This is your Prisma schema file
+// Learn more: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// User model for authentication
+model User {
+  id            String         @id @default(uuid())
+  email         String         @unique
+  passwordHash  String
+  name          String?
+  avatarUrl     String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  favoriteCities FavoriteCity[]
+  searchHistory  SearchHistory[]
+
+  @@map("users")
+}
+
+// Favorite cities for users
+model FavoriteCity {
+  id          String   @id @default(uuid())
+  userId      String
+  cityId      String   // OpenWeatherMap city ID
+  cityName    String
+  country     String?
+  lat         Float
+  lon         Float
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, cityId])
+  @@map("favorite_cities")
+}
+
+// Search history for users
+model SearchHistory {
+  id          String   @id @default(uuid())
+  userId      String
+  cityId      String
+  cityName    String
+  country     String?
+  lat         Float
+  lon         Float
+  searchedAt  DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, searchedAt])
+  @@map("search_history")
+}
+
+// Weather alerts cache
+model WeatherAlertCache {
+  id          String   @id @default(uuid())
+  cityId      String
+  alertData   Json     // Store alert data as JSON
+  fetchedAt   DateTime @default(now())
+  expiresAt   DateTime
+
+  @@index([cityId, expiresAt])
+  @@map("weather_alert_cache")
+}
