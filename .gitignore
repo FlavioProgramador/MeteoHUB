@@ -57,3 +57,9 @@ Thumbs.db
 # Tests (HTML específico)
 # =========================
 test.html
+
+# =========================
+# Prisma
+# =========================
+prisma/*.db
+prisma/*.db-journal
