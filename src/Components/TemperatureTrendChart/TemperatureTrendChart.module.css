@@ -1,0 +1,113 @@
+.chartCard {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.icon {
+  color: #f39c12;
+}
+
+.title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+}
+
+.legend {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.maxDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #f39c12;
+}
+
+.minDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #3498db;
+}
+
+.chartContainer {
+  width: 100%;
+  height: 200px;
+}
+
+.customTooltip {
+  background: rgba(30, 30, 40, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.tooltipLabel {
+  font-weight: 600;
+  color: #fff;
+  margin: 0 0 8px 0;
+  font-size: 13px;
+}
+
+.tooltipMax {
+  color: #f39c12;
+  margin: 4px 0;
+}
+
+.tooltipMin {
+  color: #3498db;
+  margin: 4px 0;
+}
+
+.tooltipRain {
+  color: #3498db;
+  margin: 6px 0 0 0;
+  font-size: 11px;
+}
+
+/* Dark theme adjustments */
+[data-theme="dark"] .chartCard {
+  background: rgba(30, 30, 40, 0.8);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Mobile responsive */
+@media (max-width: 480px) {
+  .chartContainer {
+    height: 180px;
+  }
+
+  .title {
+    font-size: 14px;
+  }
+}
