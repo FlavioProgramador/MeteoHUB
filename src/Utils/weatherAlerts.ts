@@ -1,6 +1,5 @@
 import type { WeatherData } from "../Types/weather";
 import { CloudLightning, CloudSnow, Wind, Thermometer, Droplets, Eye } from "lucide-react";
-import React from "react";
 
 export interface Alert {
   icon: React.ElementType;
@@ -8,6 +7,25 @@ export interface Alert {
   message: string;
   level: "warning" | "danger";
 }
+
+const ALERT_THRESHOLDS = {
+  metric: {
+    windDanger: 80,
+    windWarning: 50,
+    tempHeatDanger: 42,
+    tempHeatWarning: 36,
+    tempColdDanger: -15,
+    tempColdWarning: 0,
+  },
+  imperial: {
+    windDanger: 50,
+    windWarning: 31,
+    tempHeatDanger: 108,
+    tempHeatWarning: 97,
+    tempColdDanger: 5,
+    tempColdWarning: 32,
+  },
+};
 
 export function deriveAlerts(weather: WeatherData, unit: "metric" | "imperial"): Alert[] {
   const alerts: Alert[] = [];
@@ -17,12 +35,7 @@ export function deriveAlerts(weather: WeatherData, unit: "metric" | "imperial"):
   const humidity = weather.main.humidity;
   const visibility = weather.visibility;
 
-  const windDanger = unit === "metric" ? 80 : 50;
-  const windWarning = unit === "metric" ? 50 : 31;
-  const tempHeatDanger = unit === "metric" ? 42 : 108;
-  const tempHeatWarning = unit === "metric" ? 36 : 97;
-  const tempColdDanger = unit === "metric" ? -15 : 5;
-  const tempColdWarning = unit === "metric" ? 0 : 32;
+  const thresholds = ALERT_THRESHOLDS[unit];
 
   if (condition >= 200 && condition <= 232) {
     alerts.push({
@@ -42,14 +55,14 @@ export function deriveAlerts(weather: WeatherData, unit: "metric" | "imperial"):
     });
   }
 
-  if (windSpeed >= windDanger) {
+  if (windSpeed >= thresholds.windDanger) {
     alerts.push({
       icon: Wind,
       title: "🌀 Ventos Extremos",
       message: `Velocidade do vento em ${windSpeed} ${unit === "metric" ? "km/h" : "mph"} — risco de queda de objetos e acidentes.`,
       level: "danger",
     });
-  } else if (windSpeed >= windWarning) {
+  } else if (windSpeed >= thresholds.windWarning) {
     alerts.push({
       icon: Wind,
       title: "💨 Vento Forte",
@@ -58,14 +71,14 @@ export function deriveAlerts(weather: WeatherData, unit: "metric" | "imperial"):
     });
   }
 
-  if (temp >= tempHeatDanger) {
+  if (temp >= thresholds.tempHeatDanger) {
     alerts.push({
       icon: Thermometer,
       title: "🔥 Calor Extremo",
       message: `Temperatura de ${Math.round(temp)}° — risco de insolação. Mantenha-se hidratado e evite o sol direto.`,
       level: "danger",
     });
-  } else if (temp >= tempHeatWarning) {
+  } else if (temp >= thresholds.tempHeatWarning) {
     alerts.push({
       icon: Thermometer,
       title: "☀️ Alta Temperatura",
@@ -74,14 +87,14 @@ export function deriveAlerts(weather: WeatherData, unit: "metric" | "imperial"):
     });
   }
 
-  if (temp <= tempColdDanger) {
+  if (temp <= thresholds.tempColdDanger) {
     alerts.push({
       icon: Thermometer,
       title: "🥶 Frio Extremo",
       message: `Temperatura de ${Math.round(temp)}° — risco de hipotermia. Agasalhe-se bem.`,
       level: "danger",
     });
-  } else if (temp <= tempColdWarning) {
+  } else if (temp <= thresholds.tempColdWarning) {
     alerts.push({
       icon: Thermometer,
       title: "🧥 Temperatura Baixa",

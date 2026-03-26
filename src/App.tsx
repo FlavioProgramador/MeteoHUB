@@ -1,14 +1,12 @@
 import { useState, useEffect } from "react";
 import "./App.css";
-import WeatherCard from "./Components/WeatherCard/WeatherCard";
-import TemperatureChart from "./Components/TemperatureChart/TemperatureChart";
-import EmptyState from "./Components/EmptyState/EmptyState";
 
 import { useWeather } from "./Hooks/useWeather";
 import { useSearchHistory } from "./Hooks/useSearchHistory";
 import { useFavorites } from "./Hooks/useFavorites";
 import { useTheme } from "./Hooks/useTheme";
-import { useGeolocation } from "./Hooks/useGeolocation";
+import { useExtendedForecast } from "./Hooks/useExtendedForecast";
+import { handleGeolocation, type GeolocationCallbacks } from "./Utils/geolocation";
 
 import { Header } from "./Components/Header/Header";
 import { SearchPanel } from "./Components/SearchPanel/SearchPanel";
@@ -20,9 +18,11 @@ function App() {
   const [unit, setUnit] = useState<"metric" | "imperial">("metric");
   const [searchedCity, setSearchedCity] = useState("");
 
-  useTheme(); 
+  useTheme();
 
-  const { handleLocation } = useGeolocation();
+  const handleLocation = (callbacks: GeolocationCallbacks) => {
+    handleGeolocation(callbacks);
+  };
 
   const { favorites, addFavorite, removeFavorite, isFavorite } = useFavorites();
   const { history, addToHistory, removeFromHistory, clearHistory } =
@@ -40,6 +40,11 @@ function App() {
     setError,
   } = useWeather(unit);
 
+  const {
+    extendedForecast,
+    fetchExtendedForecast,
+  } = useExtendedForecast(unit);
+
   useEffect(() => {
     if (weather && weather.weather && weather.weather.length > 0) {
       const condition = weather.weather[0].main.toLowerCase();
@@ -52,18 +57,25 @@ function App() {
   useEffect(() => {
     if (!weather?.coord) return;
     fetchWeatherByCoords(weather.coord.lat, weather.coord.lon);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [unit]);
+    fetchExtendedForecast(weather.coord.lat, weather.coord.lon, weather.name);
+  }, [unit, fetchWeatherByCoords, fetchExtendedForecast, weather?.coord, weather?.name]);
 
   const handleSearchSuccess = (cityName: string) => {
     setSearchedCity("");
     addToHistory(cityName);
   };
 
+  const handleCitySearch = (city: string) => {
+    fetchWeatherByCity(city, handleSearchSuccess);
+  };
+
+  const handleCoordsSearch = (lat: number, lon: number) => {
+    fetchWeatherByCoords(lat, lon, handleSearchSuccess);
+  };
+
   const onLocationClick = () => {
     handleLocation({
-      onSuccess: (lat, lon) =>
-        fetchWeatherByCoords(lat, lon, handleSearchSuccess),
+      onSuccess: handleCoordsSearch,
       onError: setError,
     });
   };
@@ -88,15 +100,13 @@ function App() {
         favorites={favorites}
         history={history}
         isFavorite={isFavorite}
-        onSearch={(city: string) => fetchWeatherByCity(city, handleSearchSuccess)}
-        onSuggestionClick={(lat: number, lon: number) =>
-          fetchWeatherByCoords(lat, lon, handleSearchSuccess)
-        }
+        onSearch={handleCitySearch}
+        onSuggestionClick={handleCoordsSearch}
         onLocationClick={onLocationClick}
         onToggleFavorite={(city: string) =>
           isFavorite(city) ? removeFavorite(city) : addFavorite(city)
         }
-        onSelectCity={(city: string) => fetchWeatherByCity(city, handleSearchSuccess)}
+        onSelectCity={handleCitySearch}
         onRemoveFavorite={removeFavorite}
         onRemoveHistory={removeFromHistory}
         onClearHistory={clearHistory}
@@ -107,6 +117,7 @@ function App() {
         forecast={forecast}
         airPollution={airPollution}
         uvIndex={uvIndex}
+        extendedForecast={extendedForecast}
         unit={unit}
         loading={loading}
         error={error}

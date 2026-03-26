@@ -1,5 +1,6 @@
 import type { WeatherData, AirPollutionData, UVIndexData } from "../../Types/weather";
 import type { ForecastData } from "../../Types/forecast";
+import type { ExtendedForecastData } from "../../Types/extendedForecast";
 import { WeatherAlert } from "../WeatherAlert/WeatherAlert";
 import WeatherCard from "../WeatherCard/WeatherCard";
 import TemperatureChart from "../TemperatureChart/TemperatureChart";
@@ -9,6 +10,9 @@ import { SunArcCard } from "../SunArcCard/SunArcCard";
 import { MoonPhaseCard } from "../MoonPhaseCard/MoonPhaseCard";
 import { WeatherRadar } from "../WeatherRadar/WeatherRadar";
 import EmptyState from "../EmptyState/EmptyState";
+import ExtendedForecastCard from "../ExtendedForecastCard/ExtendedForecastCard";
+import TemperatureTrendChart from "../TemperatureTrendChart/TemperatureTrendChart";
+import RainProbabilityCard from "../RainProbabilityCard/RainProbabilityCard";
 import styles from "./WeatherDashboard.module.css";
 import { motion } from "framer-motion";
 
@@ -36,6 +40,7 @@ interface WeatherDashboardProps {
   forecast: ForecastData | null;
   airPollution: AirPollutionData | null;
   uvIndex: UVIndexData | null;
+  extendedForecast: ExtendedForecastData | null;
   unit: "metric" | "imperial";
   loading: boolean;
   error: string | null;
@@ -47,6 +52,7 @@ export function WeatherDashboard({
   forecast,
   airPollution,
   uvIndex,
+  extendedForecast,
   unit,
   loading,
   error,
@@ -113,6 +119,24 @@ export function WeatherDashboard({
         {forecast && (
           <motion.div variants={itemVariants}>
             <TemperatureChart data={forecast.list} unit={unit} />
+          </motion.div>
+        )}
+
+        {extendedForecast && (
+          <motion.div variants={itemVariants}>
+            <ExtendedForecastCard forecast={extendedForecast} unit={unit} />
+          </motion.div>
+        )}
+
+        {extendedForecast && (
+          <motion.div variants={itemVariants}>
+            <TemperatureTrendChart forecast={extendedForecast} unit={unit} />
+          </motion.div>
+        )}
+
+        {extendedForecast && (
+          <motion.div variants={itemVariants}>
+            <RainProbabilityCard forecast={extendedForecast} />
           </motion.div>
         )}
       </motion.div>

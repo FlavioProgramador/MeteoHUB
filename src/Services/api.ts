@@ -1,5 +1,7 @@
 import axios from "axios";
-import type { WeatherData } from "../Types/weather";
+import type { WeatherData, AirPollutionData, UVIndexData } from "../Types/weather";
+import type { ForecastData } from "../Types/forecast";
+import type { ExtendedForecastData } from "../Types/extendedForecast";
 
 const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
 
@@ -9,6 +11,10 @@ const api = axios.create({
         appid: API_KEY,
         lang: 'pt_br'
     }
+});
+
+const openMeteoApi = axios.create({
+    baseURL: "https://api.open-meteo.com/v1"
 });
 
 async function fetchFromApi<T>(url: string, params: object, errorMsg: string): Promise<T> {
@@ -30,19 +36,19 @@ export function getWeatherByCoordinates(lat: number, lon: number, unit: 'metric'
 }
 
 export function getForecastByAPI(city: string, unit: 'metric' | 'imperial' = 'metric') {
-    return fetchFromApi<unknown>("/data/2.5/forecast", { q: city, units: unit }, "Erro ao buscar dados de forecast da API:");
+    return fetchFromApi<ForecastData>("/data/2.5/forecast", { q: city, units: unit }, "Erro ao buscar dados de forecast da API:");
 }
 
 export function getForecastByCoordinates(lat: number, lon: number, unit: 'metric' | 'imperial' = 'metric') {
-    return fetchFromApi<unknown>("/data/2.5/forecast", { lat, lon, units: unit }, "Erro ao buscar dados de forecast por coordenadas:");
+    return fetchFromApi<ForecastData>("/data/2.5/forecast", { lat, lon, units: unit }, "Erro ao buscar dados de forecast por coordenadas:");
 }
 
 export function getAirPollutionByCoordinates(lat: number, lon: number) {
-    return fetchFromApi<unknown>("/data/2.5/air_pollution", { lat, lon }, "Erro ao buscar dados de poluição do ar:");
+    return fetchFromApi<AirPollutionData>("/data/2.5/air_pollution", { lat, lon }, "Erro ao buscar dados de poluição do ar:");
 }
 
 export function getUVIndexByCoordinates(lat: number, lon: number) {
-    return fetchFromApi<unknown>("/data/2.5/uvi", { lat, lon }, "Erro ao buscar dados de UV:");
+    return fetchFromApi<UVIndexData>("/data/2.5/uvi", { lat, lon }, "Erro ao buscar dados de UV:");
 }
 
 export async function getCitySuggestions(query: string) {
@@ -50,5 +56,49 @@ export async function getCitySuggestions(query: string) {
         return await fetchFromApi<unknown[]>("/geo/1.0/direct", { q: query, limit: 5 }, "Erro ao buscar sugestões de cidades:");
     } catch {
         return [];
+    }
+}
+
+export async function getExtendedForecast(lat: number, lon: number, unit: 'metric' | 'imperial' = 'metric') {
+    const temperatureUnit = unit === 'metric' ? 'celsius' : 'fahrenheit';
+
+    try {
+        const response = await openMeteoApi.get(`/forecast`, {
+            params: {
+                latitude: lat,
+                longitude: lon,
+                daily: 'temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max,weather_code,sunrise,sunset',
+                timezone: 'auto',
+                forecast_days: 15
+            }
+        });
+
+        const data = response.data;
+        const daily: ExtendedForecastData['daily'] = [];
+
+        for (let i = 0; i < data.daily.time.length; i++) {
+            daily.push({
+                date: data.daily.time[i],
+                tempMax: data.daily.temperature_2m_max[i],
+                tempMin: data.daily.temperature_2m_min[i],
+                precipitationSum: data.daily.precipitation_sum[i],
+                precipitationProbability: data.daily.precipitation_probability_max[i],
+                weatherCode: data.daily.weather_code[i],
+                sunrise: Math.floor(new Date(data.daily.sunrise[i]).getTime() / 1000),
+                sunset: Math.floor(new Date(data.daily.sunset[i]).getTime() / 1000)
+            });
+        }
+
+        return {
+            location: {
+                name: '',
+                lat,
+                lon
+            },
+            daily
+        } as ExtendedForecastData;
+    } catch (error) {
+        console.error("Erro ao buscar previsão estendida:", error);
+        throw error;
     }
 }

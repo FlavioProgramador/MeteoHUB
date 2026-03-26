@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import type { WeatherData, AirPollutionData, UVIndexData } from '../Types/weather';
 import type { ForecastData } from '../Types/forecast';
 import { getWeatherByAPI, getWeatherByCoordinates, getForecastByAPI, getForecastByCoordinates, getAirPollutionByCoordinates, getUVIndexByCoordinates } from '../Services/api';
@@ -11,7 +11,10 @@ export function useWeather(unit: 'metric' | 'imperial') {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchExtraContext = async (lat: number, lon: number) => {
+  const unitRef = useRef(unit);
+  unitRef.current = unit;
+
+  const fetchExtraContext = useCallback(async (lat: number, lon: number) => {
     let pollutionData = null;
     let uvData = null;
     try {
@@ -25,22 +28,22 @@ export function useWeather(unit: 'metric' | 'imperial') {
       console.warn("Could not fetch UV index data.");
     }
     return { pollutionData, uvData };
-  };
+  }, []);
 
-  const fetchWeatherByCity = async (city: string, onSuccess?: (cityName: string) => void) => {
+  const fetchWeatherByCity = useCallback(async (city: string, onSuccess?: (cityName: string) => void) => {
     if (!city || !city.trim()) return;
     setLoading(true);
     setError(null);
     try {
-      const data = await getWeatherByAPI(city, unit);
-      const forecastData = await getForecastByAPI(city, unit) as ForecastData;
-      
+      const data = await getWeatherByAPI(city, unitRef.current);
+      const forecastData = await getForecastByAPI(city, unitRef.current);
+
       const { pollutionData, uvData } = await fetchExtraContext(data.coord.lat, data.coord.lon);
 
       setWeather(data);
       setForecast(forecastData);
-      setAirPollution(pollutionData as AirPollutionData | null);
-      setUvIndex(uvData as UVIndexData | null);
+      setAirPollution(pollutionData);
+      setUvIndex(uvData);
 
       if (onSuccess) onSuccess(data.name);
     } catch (err) {
@@ -52,21 +55,21 @@ export function useWeather(unit: 'metric' | 'imperial') {
     } finally {
       setLoading(false);
     }
-  };
+  }, [fetchExtraContext]);
 
-  const fetchWeatherByCoords = async (lat: number, lon: number, onSuccess?: (cityName: string) => void) => {
+  const fetchWeatherByCoords = useCallback(async (lat: number, lon: number, onSuccess?: (cityName: string) => void) => {
     setLoading(true);
     setError(null);
     try {
-      const data = await getWeatherByCoordinates(lat, lon, unit);
-      const forecastData = await getForecastByCoordinates(lat, lon, unit) as ForecastData;
-      
+      const data = await getWeatherByCoordinates(lat, lon, unitRef.current);
+      const forecastData = await getForecastByCoordinates(lat, lon, unitRef.current);
+
       const { pollutionData, uvData } = await fetchExtraContext(lat, lon);
 
       setWeather(data);
       setForecast(forecastData);
-      setAirPollution(pollutionData as AirPollutionData | null);
-      setUvIndex(uvData as UVIndexData | null);
+      setAirPollution(pollutionData);
+      setUvIndex(uvData);
 
       if (onSuccess) onSuccess(data.name);
     } catch (err) {
@@ -78,17 +81,17 @@ export function useWeather(unit: 'metric' | 'imperial') {
     } finally {
       setLoading(false);
     }
-  };
+  }, [fetchExtraContext]);
 
-  return { 
-    weather, 
-    forecast, 
+  return {
+    weather,
+    forecast,
     airPollution,
     uvIndex,
-    loading, 
-    error, 
-    fetchWeatherByCity, 
+    loading,
+    error,
+    fetchWeatherByCity,
     fetchWeatherByCoords,
-    setError 
+    setError
   };
 }
