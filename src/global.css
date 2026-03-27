@@ -13,7 +13,7 @@
 
   /* Textos */
   --text-main: #0f172a;
-  --text-muted: #64748b;
+  --text-muted: #475569; 
 
   /* Cartões Efeito Vidro */
   --card-bg-glass: rgba(255, 255, 255, 0.65);
@@ -49,7 +49,7 @@
 
   /* Cartões Efeito Vidro Escuro */
   --card-bg-glass: rgba(15, 23, 42, 0.65);
-  --card-border: rgba(255, 255, 255, 0.08); /* Mais sutil no escuro */
+  --card-border: rgba(255, 255, 255, 0.08); 
   --card-border-hover: rgba(255, 255, 255, 0.18);
   --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
   --card-shadow-hover: 0 12px 48px 0 rgba(0, 0, 0, 0.5);
@@ -130,6 +130,36 @@ body {
     background 0.4s ease,
     color 0.4s ease;
   overflow-y: scroll;
+}
+
+/* --- ACCESSIBILITY & GLOBAL UTILITIES --- */
+:focus-visible {
+  outline: 2px solid var(--input-border);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+button:focus-visible,
+input:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--input-border);
+  outline-offset: 2px;
+}
+
+/* Utilidade de Card de Vidro (Design System) */
+.glass-panel {
+  background: var(--card-bg-glass);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  box-shadow: var(--card-shadow);
+  backdrop-filter: var(--card-backdrop);
+  -webkit-backdrop-filter: var(--card-backdrop);
+  transition: var(--transition);
+}
+
+.glass-panel:hover {
+  border-color: var(--card-border-hover);
+  box-shadow: var(--card-shadow-hover);
 }
 
 ::-webkit-scrollbar {

@@ -33,7 +33,7 @@ interface WeatherCardProps {
 
 const WeatherCard = ({ weather, unit, onToggleUnit }: WeatherCardProps) => {
   return (
-    <div className={styles.cardContainer}>
+    <div className={`${styles.cardContainer} glass-panel`}>
       <motion.div 
         variants={containerVariants} 
         initial="hidden" 

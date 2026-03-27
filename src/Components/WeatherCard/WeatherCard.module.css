@@ -1,18 +1,9 @@
 .cardContainer {
-  background: var(--card-bg-glass);
-  border: 1px solid var(--card-border);
   border-radius: 20px;
-  box-shadow: var(--card-shadow);
   overflow: hidden;
   width: 100%;
   animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   color: var(--text-main);
-  transition: var(--transition);
-}
-
-.cardContainer:hover {
-  box-shadow: var(--card-shadow-hover);
-  border-color: var(--card-border-hover);
 }
 
 @keyframes fadeIn {
