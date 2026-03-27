@@ -1,7 +1,7 @@
+import { motion } from "framer-motion";
+import { CloudRain, Umbrella } from "lucide-react";
 import type { ExtendedForecastData } from "../../Types/extendedForecast";
 import styles from "./RainProbabilityCard.module.css";
-import { CloudRain, Umbrella } from "lucide-react";
-import { motion } from "framer-motion";
 
 interface RainProbabilityCardProps {
   forecast: ExtendedForecastData;
@@ -29,7 +29,7 @@ const RainProbabilityCard = ({ forecast }: RainProbabilityCardProps) => {
   const riskLevel = getRainRiskLevel(maxRainDay.precipitationProbability);
 
   return (
-    <div className={styles.rainCard}>
+    <div className={`glass-panel ${styles.rainCard}`}>
       <header className={styles.header}>
         <div className={styles.headerLeft}>
           <CloudRain size={20} className={styles.icon} />
@@ -39,12 +39,7 @@ const RainProbabilityCard = ({ forecast }: RainProbabilityCardProps) => {
       </header>
 
       <div className={styles.content}>
-        <motion.div
-          className={styles.mainStat}
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.4 }}
-        >
+        <div className={styles.mainStat}>
           <div className={styles.ringContainer}>
             <svg className={styles.ringSvg} viewBox="0 0 36 36">
               <path
@@ -76,7 +71,7 @@ const RainProbabilityCard = ({ forecast }: RainProbabilityCardProps) => {
             </p>
             <p className={styles.description}>Dia com maior chance de chuva</p>
           </div>
-        </motion.div>
+        </div>
 
         <div className={styles.rainyDaysList}>
           <h4 className={styles.subtitle}>
