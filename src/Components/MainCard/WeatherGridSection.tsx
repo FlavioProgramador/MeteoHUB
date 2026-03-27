@@ -1,5 +1,5 @@
+import { CloudRain, Gauge, Moon, Sun } from "lucide-react";
 import type { WeatherData } from "../../Types/weather";
-import { Sun, Moon, CloudRain, Gauge, Sunrise, Sunset } from "lucide-react";
 import styles from "./MainCard.module.css";
 import { WeatherGridItem } from "./WeatherGridItem";
 
@@ -12,13 +12,6 @@ export const WeatherGridSection = ({
   weather,
   unit,
 }: WeatherGridSectionProps) => {
-  const formatTime = (unixTime: number, timezoneShift: number) => {
-    const dateObj = new Date((unixTime + timezoneShift) * 1000);
-    const hours = dateObj.getUTCHours().toString().padStart(2, "0");
-    const minutes = dateObj.getUTCMinutes().toString().padStart(2, "0");
-    return `${hours}:${minutes}`;
-  };
-
   return (
     <div className={styles.cardsSection}>
       <WeatherGridItem
@@ -44,18 +37,6 @@ export const WeatherGridSection = ({
         colorClass="green"
         label="Pressão"
         value={`${weather.main.pressure} hPa`}
-      />
-      <WeatherGridItem
-        icon={Sunrise}
-        colorClass="orange"
-        label="Nascer do Sol"
-        value={formatTime(weather.sys.sunrise, weather.timezone)}
-      />
-      <WeatherGridItem
-        icon={Sunset}
-        colorClass="orange"
-        label="Pôr do Sol"
-        value={formatTime(weather.sys.sunset, weather.timezone)}
       />
     </div>
   );
