@@ -56,9 +56,12 @@ function App() {
 
   useEffect(() => {
     if (!weather?.coord) return;
-    fetchWeatherByCoords(weather.coord.lat, weather.coord.lon);
+    
+    // We only want to refetch the extended forecast when unit changes.
+    // fetchWeatherByCoords will re-trigger the loading state unexpectedly
+    // if called blindly on every weather.coord change (creating an infinite-like or sticky loading loop)
     fetchExtendedForecast(weather.coord.lat, weather.coord.lon, weather.name);
-  }, [unit, fetchWeatherByCoords, fetchExtendedForecast, weather?.coord, weather?.name]);
+  }, [unit, fetchExtendedForecast]); // Removed fetchWeatherByCoords and weather?.coord from deps to prevent loop
 
   const handleSearchSuccess = (cityName: string) => {
     setSearchedCity("");
