@@ -1,15 +1,15 @@
-import type { ExtendedForecastData } from "../../Types/extendedForecast";
-import styles from "./TemperatureTrendChart.module.css";
+import { Thermometer } from "lucide-react";
 import {
-  LineChart,
   Line,
+  LineChart,
+  ReferenceLine,
+  ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  ReferenceLine,
 } from "recharts";
-import { Thermometer } from "lucide-react";
+import type { ExtendedForecastData } from "../../Types/extendedForecast";
+import styles from "./TemperatureTrendChart.module.css";
 
 interface TemperatureTrendChartProps {
   forecast: ExtendedForecastData;
@@ -73,8 +73,11 @@ const TemperatureTrendChart = ({
         </div>
       </header>
 
-      <div className={styles.chartContainer}>
-        <ResponsiveContainer width="100%" height={200}>
+      <div
+        className={styles.chartContainer}
+        style={{ width: "100%", height: "200px" }}
+      >
+        <ResponsiveContainer>
           <LineChart data={chartData}>
             <XAxis
               dataKey="date"

@@ -1,10 +1,10 @@
 import {
-  AreaChart,
   Area,
+  AreaChart,
+  ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
-  Tooltip,
-  ResponsiveContainer,
 } from "recharts";
 
 import type { ForecastItem } from "../../Types/forecast";
@@ -34,12 +34,24 @@ const TemperatureChart = ({ data, unit }: TemperatureChartProps) => {
 
   return (
     <div className={styles.chartContainer}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', marginBottom: '16px' }}>
-        <h3 className={styles.title} style={{ margin: 0 }}>Previsão (Próximas 24h)</h3>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "flex-start",
+          marginBottom: "16px",
+        }}
+      >
+        <h3 className={styles.title} style={{ margin: 0 }}>
+          Previsão (Próximas 24h)
+        </h3>
         <InfoTooltip content="Gráfico exibindo a variação prevista da temperatura para as próximas 24 horas." />
       </div>
-      <div className={styles.chartWrapper}>
-        <ResponsiveContainer width="100%" height="100%">
+      <div
+        className={styles.chartWrapper}
+        style={{ width: "100%", height: "200px" }}
+      >
+        <ResponsiveContainer>
           <AreaChart
             data={next24Hours}
             margin={{ top: 20, right: 10, left: -20, bottom: 0 }}
@@ -78,7 +90,10 @@ const TemperatureChart = ({ data, unit }: TemperatureChartProps) => {
               }}
               itemStyle={{ color: "#60a5fa", fontWeight: "bold" }}
               labelStyle={{ color: "var(--text-muted)", marginBottom: "4px" }}
-              formatter={(value) => [`${value}º${unit === 'metric' ? 'C' : 'F'}`, 'Temp']}
+              formatter={(value) => [
+                `${value}º${unit === "metric" ? "C" : "F"}`,
+                "Temp",
+              ]}
             />
             <Area
               type="monotone"
