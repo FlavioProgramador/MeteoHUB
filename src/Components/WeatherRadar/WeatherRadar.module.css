@@ -3,7 +3,7 @@
   border-radius: 20px;
   padding: 1.5rem;
   box-shadow: var(--card-shadow);
-  color: var(--text-color);
+  color: var(--text-main);
   transition: var(--transition);
   display: flex;
   flex-direction: column;
@@ -34,7 +34,7 @@
 .title {
   font-size: 1.1rem;
   font-weight: 600;
-  color: var(--text-color);
+  color: var(--text-main);
   opacity: 0.9;
 }
 
@@ -73,7 +73,7 @@
 
 :global(.leaflet-control-layers) {
   background: var(--card-bg) !important;
-  color: var(--text-color) !important;
+  color: var(--text-main) !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
   border-radius: 8px !important;
 }
@@ -85,7 +85,7 @@
 
 :global(.leaflet-control-zoom a) {
   background: var(--card-bg) !important;
-  color: var(--text-color) !important;
+  color: var(--text-main) !important;
   border-color: rgba(255, 255, 255, 0.1) !important;
 }
 

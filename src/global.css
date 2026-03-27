@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap");
 
 * {
   padding: 0;
@@ -8,20 +8,25 @@
 
 :root {
   /* Cores Light Mode */
-  --bg-gradient-start: #e0e7ff; 
+  --bg-gradient-start: #e0e7ff;
   --bg-gradient-end: #f8fafc;
-  
+
   /* Textos */
   --text-main: #0f172a;
   --text-muted: #64748b;
-  
+
   /* Cartões Efeito Vidro */
-  --card-bg-glass: rgba(255, 255, 255, 0.75);
-  --card-border: rgba(255, 255, 255, 0.8);
-  --card-shadow: 0 12px 40px -10px rgba(31, 38, 135, 0.1);
-  
+  --card-bg-glass: rgba(255, 255, 255, 0.65);
+  --card-border: rgba(255, 255, 255, 0.4);
+  --card-border-hover: rgba(255, 255, 255, 0.8);
+  --card-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+  --card-shadow-hover: 0 12px 48px 0 rgba(31, 38, 135, 0.12);
+  --card-backdrop: blur(16px);
+  -webkit-backdrop-filter: var(--card-backdrop);
+  backdrop-filter: var(--card-backdrop);
+
   /* Botões e Input */
-  --input-bg: #ffffff;
+  --input-bg: rgba(255, 255, 255, 0.8);
   --input-border: #3b82f6;
 
   /* Alertas */
@@ -29,26 +34,28 @@
   --alert-warning-text: #b45309;
 
   /* Fontes e animações globais */
-  --font-family: 'Outfit', sans-serif;
-  --transition: all 0.3s ease;
+  --font-family: "Outfit", sans-serif;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 [data-theme="dark"] {
   /* Cores Dark Mode */
-  --bg-gradient-start: #0f172a; 
+  --bg-gradient-start: #0f172a;
   --bg-gradient-end: #1e293b;
-  
+
   /* Textos */
   --text-main: #f8fafc;
   --text-muted: #94a3b8;
-  
-  /* Cartões Efeito Vidro Escuro */
-  --card-bg-glass: rgba(30, 41, 59, 0.75);
-  --card-border: rgba(255, 255, 255, 0.1);
-  --card-shadow: 0 12px 40px -10px rgba(0, 0, 0, 0.6);
 
-/* Botões e Input */
-  --input-bg: #1e293b;
+  /* Cartões Efeito Vidro Escuro */
+  --card-bg-glass: rgba(15, 23, 42, 0.65);
+  --card-border: rgba(255, 255, 255, 0.08); /* Mais sutil no escuro */
+  --card-border-hover: rgba(255, 255, 255, 0.18);
+  --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  --card-shadow-hover: 0 12px 48px 0 rgba(0, 0, 0, 0.5);
+
+  /* Botões e Input */
+  --input-bg: rgba(30, 41, 59, 0.7);
   --input-border: #60a5fa;
 
   /* Alertas */
@@ -60,63 +67,69 @@
 
 /* ENSOLARADO (Clear) */
 [data-theme="light"][data-weather="clear"] {
-  --bg-gradient-start: #fef08a; 
-  --bg-gradient-end: #bfdbfe;   
+  --bg-gradient-start: #fef08a;
+  --bg-gradient-end: #bfdbfe;
 }
 
 [data-theme="dark"][data-weather="clear"] {
-  --bg-gradient-start: #1e3a8a; 
-  --bg-gradient-end: #854d0e;   
+  --bg-gradient-start: #1e3a8a;
+  --bg-gradient-end: #854d0e;
 }
 
 /* NUBLADO (Clouds) */
 [data-theme="light"][data-weather="clouds"] {
-  --bg-gradient-start: #e2e8f0; 
-  --bg-gradient-end: #94a3b8;   
+  --bg-gradient-start: #e2e8f0;
+  --bg-gradient-end: #94a3b8;
 }
 
 [data-theme="dark"][data-weather="clouds"] {
-  --bg-gradient-start: #0f172a; 
-  --bg-gradient-end: #334155;   
+  --bg-gradient-start: #0f172a;
+  --bg-gradient-end: #334155;
 }
 
 /* CHUVA (Rain / Drizzle / Thunderstorm) */
 [data-theme="light"][data-weather="rain"],
 [data-theme="light"][data-weather="drizzle"],
 [data-theme="light"][data-weather="thunderstorm"] {
-  --bg-gradient-start: #64748b; 
-  --bg-gradient-end: #3b82f6;   
+  --bg-gradient-start: #64748b;
+  --bg-gradient-end: #3b82f6;
 }
 
 [data-theme="dark"][data-weather="rain"],
 [data-theme="dark"][data-weather="drizzle"],
 [data-theme="dark"][data-weather="thunderstorm"] {
-  --bg-gradient-start: #020617; 
-  --bg-gradient-end: #1e3a8a;   
+  --bg-gradient-start: #020617;
+  --bg-gradient-end: #1e3a8a;
 }
 
 /* NEVE (Snow) */
 [data-theme="light"][data-weather="snow"] {
-  --bg-gradient-start: #f1f5f9; 
-  --bg-gradient-end: #e0f2fe;   
+  --bg-gradient-start: #f1f5f9;
+  --bg-gradient-end: #e0f2fe;
 }
 
 [data-theme="dark"][data-weather="snow"] {
-  --bg-gradient-start: #0f172a; 
-  --bg-gradient-end: #bae6fd;   
+  --bg-gradient-start: #0f172a;
+  --bg-gradient-end: #bae6fd;
 }
 
 body {
   font-family: var(--font-family);
-  background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--bg-gradient-start) 0%,
+    var(--bg-gradient-end) 100%
+  );
   color: var(--text-main);
   min-height: 100vh;
   display: flex;
   justify-content: center;
-  align-items: flex-start; 
+  align-items: flex-start;
   background-attachment: fixed;
-  transition: background 0.4s ease, color 0.4s ease;
-  overflow-y: scroll; 
+  transition:
+    background 0.4s ease,
+    color 0.4s ease;
+  overflow-y: scroll;
 }
 
 ::-webkit-scrollbar {

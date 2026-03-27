@@ -1,11 +1,11 @@
 .sunCard {
   background: var(--card-bg-glass);
   border: 1.5px solid var(--card-border);
-  backdrop-filter: blur(10px);
+  backdrop-filter: var(--card-backdrop);
   border-radius: 20px;
   padding: 24px;
   box-shadow: var(--card-shadow);
-  color: var(--text-color);
+  color: var(--text-main);
   transition: var(--transition);
   height: 100%;
   display: flex;

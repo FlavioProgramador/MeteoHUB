@@ -1,7 +1,7 @@
 .chartContainer {
   background: var(--card-bg-glass);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: var(--card-backdrop);
+  -webkit-backdrop-filter: var(--card-backdrop);
   border: 1px solid var(--card-border);
   border-radius: 20px;
   padding: 1.5rem;

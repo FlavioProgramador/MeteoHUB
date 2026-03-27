@@ -1,12 +1,14 @@
 .footer {
-  background: #465161; 
+  background: rgba(0, 0, 0, 0.05); /* Slight tint for contrast */
+  border-top: 1px solid var(--card-border);
   padding: 1rem 2rem;
   text-align: center;
   font-size: 0.85rem;
-  color: #d1d5db; 
+  color: var(--text-muted);
+  transition: var(--transition);
 }
 
 .highlight {
   font-weight: 700;
-  color: #ffffff;
+  color: var(--text-main);
 }
