@@ -1,75 +1,73 @@
-import { Response } from 'express'
-import { AuthenticatedRequest, RegisterInput, LoginInput } from '../types/index.js'
-import { registerUser, loginUser, getUserById } from '../services/authService.js'
-import { sendSuccess, sendError } from '../utils/response.js'
+import { Response } from "express";
+import {
+  getUserById,
+  loginUser,
+  registerUser,
+} from "../services/authService.js";
+import {
+  AuthenticatedRequest,
+  LoginInput,
+  RegisterInput,
+} from "../types/index.js";
+import { UnauthorizedError, ValidationError } from "../utils/errors.js";
+import { sendSuccess } from "../utils/response.js";
+
+const setTokenCookie = (res: Response, token: string) => {
+  res.cookie("token", token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 dias
+  });
+};
 
 export const register = async (
   req: AuthenticatedRequest,
-  res: Response
+  res: Response,
 ): Promise<void> => {
-  try {
-    const { email, password, name } = req.body as RegisterInput
+  const { email, password, name } = req.body as RegisterInput;
 
-    if (!email || !password) {
-      sendError(res, 'Email e senha são obrigatórios', 400)
-      return
-    }
-
-    if (password.length < 6) {
-      sendError(res, 'Senha deve ter pelo menos 6 caracteres', 400)
-      return
-    }
-
-    const result = await registerUser({ email, password, name })
-
-    sendSuccess(res, result, 'Usuário criado com sucesso', 201)
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Erro ao criar usuário'
-    sendError(res, message, 400)
+  if (!email || !password) {
+    throw new ValidationError("Email e senha são obrigatórios");
   }
-}
+
+  if (password.length < 6) {
+    throw new ValidationError("Senha deve ter pelo menos 6 caracteres");
+  }
+
+  const result = await registerUser({ email, password, name });
+
+  setTokenCookie(res, result.token);
+
+  sendSuccess(res, { user: result.user }, "Usuário criado com sucesso", 201);
+};
 
 export const login = async (
   req: AuthenticatedRequest,
-  res: Response
+  res: Response,
 ): Promise<void> => {
-  try {
-    const { email, password } = req.body as LoginInput
+  const { email, password } = req.body as LoginInput;
 
-    if (!email || !password) {
-      sendError(res, 'Email e senha são obrigatórios', 400)
-      return
-    }
-
-    const result = await loginUser({ email, password })
-
-    sendSuccess(res, result, 'Login realizado com sucesso')
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Erro ao fazer login'
-    sendError(res, message, 401)
+  if (!email || !password) {
+    throw new ValidationError("Email e senha são obrigatórios");
   }
-}
+
+  const result = await loginUser({ email, password });
+
+  setTokenCookie(res, result.token);
+
+  sendSuccess(res, { user: result.user }, "Login realizado com sucesso");
+};
 
 export const getProfile = async (
   req: AuthenticatedRequest,
-  res: Response
+  res: Response,
 ): Promise<void> => {
-  try {
-    if (!req.user?.id) {
-      sendError(res, 'Usuário não autenticado', 401)
-      return
-    }
-
-    const user = await getUserById(req.user.id)
-
-    if (!user) {
-      sendError(res, 'Usuário não encontrado', 404)
-      return
-    }
-
-    sendSuccess(res, user)
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Erro ao buscar perfil'
-    sendError(res, message, 500)
+  if (!req.user?.id) {
+    throw new UnauthorizedError("Usuário não autenticado");
   }
-}
+
+  const user = await getUserById(req.user.id);
+
+  sendSuccess(res, user);
+};

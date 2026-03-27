@@ -1,32 +1,36 @@
-import { NextFunction, Response } from 'express'
-import jwt from 'jsonwebtoken'
-import { AuthenticatedRequest } from '../types/index.js'
-import { sendError } from '../utils/response.js'
+import { NextFunction, Response } from "express";
+import jwt from "jsonwebtoken";
+import { AuthenticatedRequest } from "../types/index.js";
+import { UnauthorizedError } from "../utils/errors.js";
 
 export const authenticate = (
   req: AuthenticatedRequest,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): void => {
   try {
-    const authHeader = req.headers.authorization
-    if (!authHeader?.startsWith('Bearer ')) {
-      sendError(res, 'Token não fornecido', 401)
-      return
+    // Busca o token primeiramente via cookie para segurança (HttpOnly)
+    // ou via Authorization header (fallback para clientes não web)
+    let token = req.cookies?.token;
+
+    if (!token) {
+      const authHeader = req.headers.authorization;
+      if (authHeader?.startsWith("Bearer ")) {
+        token = authHeader.split(" ")[1];
+      }
     }
 
-    const token = authHeader.split(' ')[1]
-    const secret = process.env.JWT_SECRET
-
-    if (!secret) {
-      sendError(res, 'Configuração do servidor inválida', 500)
-      return
+    if (!token) {
+      throw new UnauthorizedError("Token não fornecido");
     }
 
-    const decoded = jwt.verify(token, secret) as { id: string; email: string }
-    req.user = { id: decoded.id, email: decoded.email }
-    next()
-  } catch {
-    sendError(res, 'Token inválido ou expirado', 401)
+    const secret =
+      process.env.JWT_SECRET || "default-secret-change-in-production";
+
+    const decoded = jwt.verify(token, secret) as { id: string; email: string };
+    req.user = { id: decoded.id, email: decoded.email };
+    next();
+  } catch (error) {
+    next(new UnauthorizedError("Token inválido ou expirado"));
   }
-}
+};
