@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
 import { Search } from "lucide-react";
+import React, { useEffect, useRef, useState } from "react";
 import { getCitySuggestions } from "../../Services/api";
 import type { CitySuggestion } from "../../Types/geocoding";
 
@@ -10,22 +10,24 @@ interface SearchBarProps {
   searchedCity: string;
 }
 
-export const SearchBar = ({ onSearch, onSuggestionClick, loading, searchedCity }: SearchBarProps) => {
+export const SearchBar = ({
+  onSearch,
+  onSuggestionClick,
+  loading,
+  searchedCity,
+}: SearchBarProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [suggestions, setSuggestions] = useState<CitySuggestion[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
-  
+
   const skipNextSuggestion = useRef(false);
   const isFocused = useRef(false);
 
-  // Sincroniza a caixa de texto caso a pesquisa venha dos Favoritos/Recentes
-  // e bloqueia a abertura do dropdown
   useEffect(() => {
     if (searchedCity && searchedCity !== searchTerm) {
       skipNextSuggestion.current = true;
       setSearchTerm(searchedCity);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchedCity]);
 
   useEffect(() => {
@@ -36,15 +38,18 @@ export const SearchBar = ({ onSearch, onSuggestionClick, loading, searchedCity }
     if (searchTerm.trim().length > 2) {
       const delayDebounceFn = setTimeout(async () => {
         const data = (await getCitySuggestions(searchTerm)) as CitySuggestion[];
-        
-        // Remove cidades duplicadas retornadas pela API filtrando pelo nome e estado
-        const uniqueData = data.filter((v: CitySuggestion, i: number, a: CitySuggestion[]) => 
-          a.findIndex((t: CitySuggestion) => t.name === v.name && t.state === v.state && t.country === v.country) === i
+        const uniqueData = data.filter(
+          (v: CitySuggestion, i: number, a: CitySuggestion[]) =>
+            a.findIndex(
+              (t: CitySuggestion) =>
+                t.name === v.name &&
+                t.state === v.state &&
+                t.country === v.country,
+            ) === i,
         );
 
         setSuggestions(uniqueData);
         
-        // Exibe a lista SOMENTE se o usuário ainda estiver com o input focado.
         if (isFocused.current) {
           setShowSuggestions(true);
         }
@@ -69,7 +74,7 @@ export const SearchBar = ({ onSearch, onSuggestionClick, loading, searchedCity }
     setSuggestions([]);
     skipNextSuggestion.current = true;
     setSearchTerm(sug.name);
-    
+
     if (sug.lat && sug.lon) {
       onSuggestionClick(sug.lat, sug.lon, sug.name);
     } else {
@@ -86,7 +91,11 @@ export const SearchBar = ({ onSearch, onSuggestionClick, loading, searchedCity }
           name="city"
           placeholder="Digite o nome da cidade"
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={(e) => {
+            
+            const sanitizedValue = e.target.value.replace(/[<>{}()]/g, "");
+            setSearchTerm(sanitizedValue);
+          }}
           onFocus={() => {
             isFocused.current = true;
             if (suggestions.length > 0) setShowSuggestions(true);
@@ -101,13 +110,19 @@ export const SearchBar = ({ onSearch, onSuggestionClick, loading, searchedCity }
           <ul className="suggestionsList">
             {suggestions.map((sug, i) => (
               <li key={i} onClick={() => handleSuggestionClickLocal(sug)}>
-                {sug.name}{sug.state ? `, ${sug.state}` : ""} - {sug.country}
+                {sug.name}
+                {sug.state ? `, ${sug.state}` : ""} - {sug.country}
               </li>
             ))}
           </ul>
         )}
       </div>
-      <button className="searchIconBtn" type="submit" disabled={loading} aria-label="Buscar">
+      <button
+        className="searchIconBtn"
+        type="submit"
+        disabled={loading}
+        aria-label="Buscar"
+      >
         <Search size={22} className="searchIconBlue" />
       </button>
     </form>
