@@ -1,5 +1,4 @@
-import { motion } from "framer-motion";
-import { CloudRain, Umbrella } from "lucide-react";
+import { CloudRain, Droplet } from "lucide-react";
 import type { ExtendedForecastData } from "../../Types/extendedForecast";
 import styles from "./RainProbabilityCard.module.css";
 
@@ -8,109 +7,76 @@ interface RainProbabilityCardProps {
 }
 
 const RainProbabilityCard = ({ forecast }: RainProbabilityCardProps) => {
-  const rainyDays = forecast.daily.filter(
-    (day) => day.precipitationProbability > 40 || day.precipitationSum > 5,
+  const dailyData = forecast.daily.slice(0, 5);
+  
+  const maxRainDay = dailyData.reduce(
+    (max, day) => day.precipitationProbability > max.precipitationProbability ? day : max,
+    dailyData[0]
   );
 
-  const maxRainDay = forecast.daily.reduce(
-    (max, day) =>
-      day.precipitationProbability > max.precipitationProbability ? day : max,
-    forecast.daily[0],
-  );
-
-  const getRainRiskLevel = (probability: number) => {
-    if (probability >= 80) return { label: "Extremo", color: "#9b59b6" };
-    if (probability >= 60) return { label: "Alto", color: "#e74c3c" };
-    if (probability >= 40) return { label: "Moderado", color: "#f39c12" };
-    if (probability >= 20) return { label: "Baixo", color: "#f1c40f" };
-    return { label: "Mínimo", color: "#2ecc71" };
-  };
-
-  const riskLevel = getRainRiskLevel(maxRainDay.precipitationProbability);
+  const hasRainInForecast = maxRainDay.precipitationProbability > 0;
 
   return (
-    <div className={`glass-panel ${styles.rainCard}`}>
-      <header className={styles.header}>
-        <div className={styles.headerLeft}>
-          <CloudRain size={20} className={styles.icon} />
-          <h3 className={styles.title}>Previsão de Chuva</h3>
-        </div>
-        <Umbrella size={20} className={styles.umbrellaIcon} />
-      </header>
+    <div className={`glass-panel ${styles.card}`}>
+      <div className={styles.header}>
+        <CloudRain size={16} className={styles.headerIcon} />
+        <h2>Previsão de Chuva</h2>
+      </div>
 
-      <div className={styles.content}>
-        <div className={styles.mainStat}>
-          <div className={styles.ringContainer}>
-            <svg className={styles.ringSvg} viewBox="0 0 36 36">
-              <path
-                className={styles.ringBg}
-                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+      <div className={styles.hero}>
+        <div className={styles.heroLeft}>
+          <span className={styles.heroPercentage}>
+            {maxRainDay.precipitationProbability}%
+          </span>
+          <span className={styles.heroLabel}>
+            {hasRainInForecast ? "Pico de Chance" : "Máxima"}
+          </span>
+        </div>
+        
+        <div className={styles.heroRight}>
+          <p className={styles.heroDesc}>
+            {hasRainInForecast 
+              ? `Maior probabilidade de precipitação concentrada na ${new Date(maxRainDay.date).toLocaleDateString('pt-BR', { weekday: 'long' })}.`
+              : "Sem probabilidade de chuva para os próximos dias."}
+          </p>
+        </div>
+      </div>
+
+      <div className={styles.daysContainer}>
+        {dailyData.map((day) => {
+          const date = new Date(day.date);
+          const today = new Date();
+          const isToday = date.getDate() === today.getDate() && date.getMonth() === today.getMonth();
+          const dayName = isToday ? "Hoje" : date.toLocaleDateString("pt-BR", { weekday: "short" }).replace('.', '');
+          const chance = day.precipitationProbability;
+
+          return (
+            <div key={day.date} className={`${styles.dayCol} ${chance < 20 ? styles.lowChance : ''}`}>
+              <span className={styles.dayName}>{dayName}</span>
+              
+              <Droplet 
+                size={22} 
+                className={styles.dropIcon}
+                fill={chance >= 30 ? "#60a5fa" : "transparent"}
+                strokeWidth={chance >= 30 ? 0 : 2}
+                style={{ 
+                  opacity: chance === 0 ? 0.15 : Math.max(0.4, chance / 100),
+                  color: "#60a5fa" 
+                }} 
               />
-              <path
-                className={styles.ringProgress}
-                strokeDasharray={`${maxRainDay.precipitationProbability}, 100`}
-                style={{ stroke: riskLevel.color }}
-                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-              />
-            </svg>
-            <div className={styles.ringValue}>
-              <span className={styles.percentage}>
-                {maxRainDay.precipitationProbability}%
-              </span>
-              <span className={styles.riskLabel}>{riskLevel.label}</span>
+              
+              <div className={styles.chanceWrapper}>
+                <span className={styles.chanceText}>{chance}%</span>
+                {day.precipitationSum > 0 && (
+                  <span className={styles.amountText}>{day.precipitationSum.toFixed(1)}mm</span>
+                )}
+              </div>
             </div>
-          </div>
-
-          <div className={styles.info}>
-            <p className={styles.date}>
-              {new Date(maxRainDay.date).toLocaleDateString("pt-BR", {
-                weekday: "long",
-                day: "numeric",
-                month: "long",
-              })}
-            </p>
-            <p className={styles.description}>Dia com maior chance de chuva</p>
-          </div>
-        </div>
-
-        <div className={styles.rainyDaysList}>
-          <h4 className={styles.subtitle}>
-            <CloudRain size={16} />
-            Dias chuvosos ({rainyDays.length})
-          </h4>
-
-          <div className={styles.daysGrid}>
-            {rainyDays.slice(0, 5).map((day, index) => (
-              <motion.div
-                key={day.date}
-                className={styles.rainyDay}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.05 }}
-              >
-                <span className={styles.dayDate}>
-                  {new Date(day.date).toLocaleDateString("pt-BR", {
-                    day: "numeric",
-                    month: "short",
-                  })}
-                </span>
-                <div className={styles.dayInfo}>
-                  <span className={styles.dayChance}>
-                    {day.precipitationProbability}%
-                  </span>
-                  {day.precipitationSum > 0 && (
-                    <span className={styles.dayAmount}>
-                      {day.precipitationSum.toFixed(1)}mm
-                    </span>
-                  )}
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
+          );
+        })}
       </div>
     </div>
   );
-};
+}
 
 export default RainProbabilityCard;
