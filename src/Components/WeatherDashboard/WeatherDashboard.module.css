@@ -1,3 +1,55 @@
+.dashboardWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.tabsContainer {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 10px 0 20px;
+  padding: 0.5rem;
+  background: var(--card-bg-glass);
+  border-radius: 99px;
+  border: 1px solid var(--card-border);
+  backdrop-filter: var(--card-backdrop);
+}
+
+.tabButton {
+  flex: 1;
+  max-width: 250px;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 99px;
+  transition: all 0.3s ease;
+}
+
+.tabButton:hover {
+  color: var(--text-main);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.activeTab {
+  background: var(--primary, #3b82f6) !important;
+  color: #fff !important;
+  box-shadow: 0 4px 15px -3px rgba(59, 130, 246, 0.4);
+}
+
+.tabContent {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
 .cardsContainer {
   display: flex;
   flex-direction: column;
@@ -17,7 +69,7 @@
   .gridContainer {
     grid-template-columns: repeat(2, 1fr);
   }
-  
+
   .airQualityWrapper {
     grid-column: span 2;
   }
@@ -27,7 +79,7 @@
   .gridContainer {
     grid-template-columns: repeat(3, 1fr);
   }
-  
+
   .airQualityWrapper {
     grid-column: span 3;
   }
