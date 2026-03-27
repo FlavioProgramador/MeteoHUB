@@ -1,11 +1,12 @@
-import { Router } from 'express'
-import { register, login, getProfile } from '../controllers/authController.js'
-import { authenticate } from '../middleware/auth.js'
+import { Router } from "express";
+import { getProfile, login, register } from "../controllers/authController.js";
+import { asyncErrorWrapper } from "../middleware/asyncWrapper.js";
+import { authenticate } from "../middleware/auth.js";
 
-const router = Router()
+const router = Router();
 
-router.post('/register', register)
-router.post('/login', login)
-router.get('/profile', authenticate, getProfile)
+router.post("/register", asyncErrorWrapper(register as any));
+router.post("/login", asyncErrorWrapper(login as any));
+router.get("/profile", authenticate, asyncErrorWrapper(getProfile as any));
 
-export default router
+export default router;
