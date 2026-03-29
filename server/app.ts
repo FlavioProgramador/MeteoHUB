@@ -3,18 +3,19 @@ import cors from "cors";
 import express from "express";
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";
+import swaggerUi from "swagger-ui-express";
 import { csrfProtection } from "./middleware/csrf.js";
 import { errorBoundary } from "./middleware/errorBoundary.js";
 import routes from "./routes/index.js";
+import { swaggerSpec } from "./swagger.js";
 
 const app = express();
 
 app.use(helmet());
 
-
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, 
-  max: 100, 
+  windowMs: 15 * 60 * 1000,
+  max: 100,
   message:
     "Muitas requisições desta origem, por favor tente novamente mais tarde.",
 });
@@ -34,6 +35,9 @@ app.use(cookieParser());
 app.use(express.json());
 
 app.use(express.urlencoded({ extended: true }));
+
+// Rota do Swagger
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use("/api", routes);
 
