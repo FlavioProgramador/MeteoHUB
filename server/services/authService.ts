@@ -1,5 +1,6 @@
 import bcrypt from "bcryptjs";
-import jwt, { Secret, SignOptions } from "jsonwebtoken";
+import crypto from "crypto";
+import jwt, { Secret } from "jsonwebtoken";
 import { userRepository } from "../repositories/userRepository.js";
 import { LoginInput, RegisterInput, UserPayload } from "../types/index.js";
 import {
@@ -7,6 +8,7 @@ import {
   NotFoundError,
   UnauthorizedError,
 } from "../utils/errors.js";
+import prisma from "../utils/prisma.js";
 
 const JWT_SECRET: Secret =
   process.env.JWT_SECRET || "default-secret-change-in-production";
@@ -14,7 +16,8 @@ const JWT_EXPIRES_IN_SECONDS = 7 * 24 * 60 * 60;
 
 export interface AuthResult {
   user: UserPayload;
-  token: string;
+  accessToken: string;
+  refreshToken: string;
 }
 
 export const registerUser = async (
@@ -35,11 +38,17 @@ export const registerUser = async (
     name,
   });
 
-  const token = generateToken({ id: user.id, email: user.email });
+  const accessToken = generateAccessToken({
+    id: user.id,
+    email: user.email,
+    name: user.name,
+  });
+  const refreshToken = await generateRefreshToken(user.id);
 
   return {
     user: { id: user.id, email: user.email, name: user.name },
-    token,
+    accessToken,
+    refreshToken,
   };
 };
 
@@ -56,11 +65,17 @@ export const loginUser = async (input: LoginInput): Promise<AuthResult> => {
     throw new UnauthorizedError("Credenciais inválidas");
   }
 
-  const token = generateToken({ id: user.id, email: user.email });
+  const accessToken = generateAccessToken({
+    id: user.id,
+    email: user.email,
+    name: user.name,
+  });
+  const refreshToken = await generateRefreshToken(user.id);
 
   return {
     user: { id: user.id, email: user.email, name: user.name },
-    token,
+    accessToken,
+    refreshToken,
   };
 };
 
@@ -72,7 +87,59 @@ export const getUserById = async (id: string) => {
   return user;
 };
 
-const generateToken = (payload: UserPayload): string => {
-  const options: SignOptions = { expiresIn: JWT_EXPIRES_IN_SECONDS };
-  return jwt.sign(payload, JWT_SECRET, options);
+const generateAccessToken = (payload: UserPayload): string => {
+  return jwt.sign(payload, JWT_SECRET, { expiresIn: "15m" });
+};
+
+const generateRefreshToken = async (userId: string): Promise<string> => {
+  const token = crypto.randomBytes(40).toString("hex");
+  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
+
+  await prisma.refreshToken.create({
+    data: {
+      token,
+      userId,
+      expiresAt,
+    },
+  });
+
+  return token;
+};
+
+export const revokeRefreshToken = async (token: string) => {
+  await prisma.refreshToken.deleteMany({
+    where: { token },
+  });
+};
+
+export const refreshTokens = async (
+  refreshToken: string,
+): Promise<AuthResult> => {
+  const storedToken = await prisma.refreshToken.findUnique({
+    where: { token: refreshToken },
+    include: { user: true },
+  });
+
+  if (!storedToken || storedToken.expiresAt < new Date()) {
+    if (storedToken) {
+      await prisma.refreshToken.delete({ where: { id: storedToken.id } });
+    }
+    throw new UnauthorizedError("Refresh token inválido ou expirado");
+  }
+
+  await prisma.refreshToken.delete({ where: { id: storedToken.id } });
+
+  const payload = {
+    id: storedToken.user.id,
+    email: storedToken.user.email,
+    name: storedToken.user.name,
+  };
+  const newAccessToken = generateAccessToken(payload);
+  const newRefreshToken = await generateRefreshToken(storedToken.user.id);
+
+  return {
+    user: payload,
+    accessToken: newAccessToken,
+    refreshToken: newRefreshToken,
+  };
 };
