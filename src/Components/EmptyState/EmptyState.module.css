@@ -1,192 +1,152 @@
 .emptyContainer {
-  background: var(--card-bg-glass);
-  border: 1px solid var(--card-border);
-  backdrop-filter: var(--card-backdrop);
-  border-radius: 24px;
-  padding: 4rem 2rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  gap: 3rem;
+  padding: 3rem 1rem;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.heroSection {
   text-align: center;
-  gap: 2rem;
-  box-shadow: var(--card-shadow);
-  position: relative;
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
 }
 
-/* Subtle gradient background glow */
-.emptyContainer::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle at center, rgba(59, 130, 246, 0.05) 0%, transparent 50%);
-  pointer-events: none;
-  z-index: 0;
-}
-
-.illustrationWrapper {
-  position: relative;
-  margin-bottom: 1rem;
-  z-index: 1;
-}
-
-.pulseRing {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  background: rgba(59, 130, 246, 0.1);
-  animation: pulse 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-@keyframes pulse {
-  0% { transform: translate(-50%, -50%) scale(0.8); opacity: 1; }
-  100% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; }
-}
-
-.iconCircle {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(20, 184, 166, 0.15));
-  border: 1px solid rgba(255, 255, 255, 0.1);
+.iconWrapper {
   width: 100px;
   height: 100px;
   border-radius: 50%;
+  background: radial-gradient(circle at top left, rgba(59, 130, 246, 0.2) 0%, transparent 70%), rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(59, 130, 246, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
-  z-index: 2;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 30px rgba(59, 130, 246, 0.15);
+  margin-bottom: 0.5rem;
 }
 
-.mainIcon {
-  color: #60a5fa;
+.heroIcon {
+  color: #3b82f6;
   stroke-width: 1.5;
-  filter: drop-shadow(0 4px 6px rgba(59, 130, 246, 0.4));
-}
-
-.floatingIcon {
-  position: absolute;
-  color: var(--text-muted);
-  opacity: 0.8;
-  z-index: 3;
-}
-
-.floatRight {
-  top: -10px;
-  right: -25px;
-  color: #fbbf24;
-  animation: float 4s ease-in-out infinite alternate;
-}
-
-.floatLeft {
-  bottom: 10px;
-  left: -20px;
-  color: #a78bfa;
-  animation: float 5s ease-in-out infinite alternate-reverse;
-}
-
-@keyframes float {
-  0% { transform: translateY(0px) rotate(0deg); }
-  100% { transform: translateY(-15px) rotate(5deg); }
-}
-
-.textContent {
-  z-index: 1;
-  max-width: 500px;
 }
 
 .title {
-  color: var(--text-main);
-  font-size: 1.75rem;
+  font-size: 3rem;
   font-weight: 800;
-  margin: 0 0 1rem 0;
-  letter-spacing: -0.5px;
+  color: var(--text-main);
+  line-height: 1.1;
+  margin: 0;
+  letter-spacing: -1px;
+}
+
+.titleHighlight {
+  background: linear-gradient(135deg, #3b82f6, #14b8a6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .subtitle {
+  font-size: 1.15rem;
   color: var(--text-muted);
-  font-size: 1.05rem;
+  max-width: 500px;
   line-height: 1.6;
   margin: 0;
+  font-weight: 400;
 }
 
-.featuresContainer {
+.quickSearchSection {
+  width: 100%;
   display: flex;
-  gap: 1.5rem;
-  margin-top: 1rem;
-  z-index: 1;
-  flex-wrap: wrap;
-  justify-content: center;
+  flex-direction: column;
+  gap: 1.25rem;
 }
 
-.featureItem {
+.quickSearchHeader {
   display: flex;
   align-items: center;
+  justify-content: flex-start;
   gap: 0.5rem;
-  background: var(--card-bg-glass);
-  border: 1px solid var(--card-border);
-  padding: 0.5rem 1rem;
-  border-radius: 50px;
-  color: var(--text-main);
-  font-size: 0.9rem;
+  width: 100%;
+  padding-left: 0.5rem;
+}
+
+.quickSearchHeader h3 {
+  font-size: 1.1rem;
   font-weight: 600;
-  backdrop-filter: var(--card-backdrop);
-  box-shadow: 0 2px 10px -3px rgba(0,0,0,0.1);
-  transition: transform 0.2s;
+  color: var(--text-main);
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.featureItem:hover {
-  transform: translateY(-2px);
+.navIcon {
+  color: var(--text-muted);
 }
 
-.featureDot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #14b8a6;
-  box-shadow: 0 0 10px #14b8a6;
+.citiesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+  width: 100%;
 }
 
-.featureItem:nth-child(2) .featureDot {
-  background: #3b82f6;
-  box-shadow: 0 0 10px #3b82f6;
+.cityCard {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  border-radius: 16px;
+  cursor: pointer;
+  border: 1px solid var(--card-border);
+  background: var(--card-bg-glass);
+  transition: all 0.3s ease;
+  text-align: left;
 }
 
-.featureItem:nth-child(3) .featureDot {
-  background: #a78bfa;
-  box-shadow: 0 0 10px #a78bfa;
+.cityCard:hover {
+  border-color: rgba(59, 130, 246, 0.4);
+  background: rgba(59, 130, 246, 0.05);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
-/* Mobile Responsiveness */
-@media (max-width: 768px) {
-  .emptyContainer {
-    padding: 2.5rem 1.5rem;
-    gap: 1.5rem;
-  }
-  .iconCircle {
-    width: 80px;
-    height: 80px;
-  }
-  .mainIcon {
-    width: 40px;
-    height: 40px;
-  }
+.cityIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--input-border);
+}
+
+.cityName {
+  flex: 1;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-main);
+  font-family: inherit;
+}
+
+.arrowIcon {
+  color: var(--text-muted);
+  opacity: 0.3;
+  transition: all 0.3s ease;
+  transform: translateX(-4px);
+}
+
+.cityCard:hover .arrowIcon {
+  opacity: 1;
+  transform: translateX(0);
+  color: #3b82f6;
+}
+
+@media (max-width: 600px) {
   .title {
-    font-size: 1.4rem;
+    font-size: 2.2rem;
   }
-  .subtitle {
-    font-size: 0.95rem;
-  }
-  .featuresContainer {
-    flex-direction: column;
-    gap: 0.75rem;
-    align-items: center;
+  .emptyContainer {
+    padding: 2rem 0;
   }
 }

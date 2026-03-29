@@ -1,39 +1,43 @@
+import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
-import type { WeatherData, AirPollutionData, UVIndexData } from "../../Types/weather";
-import type { ForecastData } from "../../Types/forecast";
 import type { ExtendedForecastData } from "../../Types/extendedForecast";
-import { WeatherAlert } from "../WeatherAlert/WeatherAlert";
-import WeatherCard from "../WeatherCard/WeatherCard";
-import TemperatureChart from "../TemperatureChart/TemperatureChart";
+import type { ForecastData } from "../../Types/forecast";
+import type {
+  AirPollutionData,
+  UVIndexData,
+  WeatherData,
+} from "../../Types/weather";
 import { AirQualityCard } from "../AirQualityCard/AirQualityCard";
-import { UVIndexCard } from "../UVIndexCard/UVIndexCard";
-import { SunArcCard } from "../SunArcCard/SunArcCard";
-import { MoonPhaseCard } from "../MoonPhaseCard/MoonPhaseCard";
-import { WeatherRadar } from "../WeatherRadar/WeatherRadar";
 import EmptyState from "../EmptyState/EmptyState";
 import ExtendedForecastCard from "../ExtendedForecastCard/ExtendedForecastCard";
-import TemperatureTrendChart from "../TemperatureTrendChart/TemperatureTrendChart";
+import { MoonPhaseCard } from "../MoonPhaseCard/MoonPhaseCard";
 import RainProbabilityCard from "../RainProbabilityCard/RainProbabilityCard";
+import { SunArcCard } from "../SunArcCard/SunArcCard";
+import TemperatureChart from "../TemperatureChart/TemperatureChart";
+import TemperatureTrendChart from "../TemperatureTrendChart/TemperatureTrendChart";
+import { UVIndexCard } from "../UVIndexCard/UVIndexCard";
+import { WeatherAlert } from "../WeatherAlert/WeatherAlert";
+import WeatherCard from "../WeatherCard/WeatherCard";
+import { WeatherRadar } from "../WeatherRadar/WeatherRadar";
 import styles from "./WeatherDashboard.module.css";
-import { motion, AnimatePresence } from "framer-motion";
 
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1
-    }
-  }
+      staggerChildren: 0.1,
+    },
+  },
 };
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     y: 0,
-    transition: { duration: 0.4, ease: "easeOut" as const }
-  }
+    transition: { duration: 0.4, ease: "easeOut" as const },
+  },
 };
 
 interface WeatherDashboardProps {
@@ -46,6 +50,7 @@ interface WeatherDashboardProps {
   loading: boolean;
   error: string | null;
   onToggleUnit: () => void;
+  onSearch?: (city: string) => void;
 }
 
 type TabType = "hoje" | "previsao";
@@ -60,6 +65,7 @@ export function WeatherDashboard({
   loading,
   error,
   onToggleUnit,
+  onSearch,
 }: WeatherDashboardProps) {
   const [activeTab, setActiveTab] = useState<TabType>("hoje");
 
@@ -75,9 +81,12 @@ export function WeatherDashboard({
             <WeatherAlert weather={weather} unit={unit} />
           </motion.div>
         )}
-        
+
         {weather && (
-          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+          >
             <WeatherCard
               weather={weather}
               unit={unit}
@@ -87,13 +96,13 @@ export function WeatherDashboard({
         )}
 
         <div className={styles.tabsContainer}>
-          <button 
+          <button
             className={`${styles.tabButton} ${activeTab === "hoje" ? styles.activeTab : ""}`}
             onClick={() => setActiveTab("hoje")}
           >
             Detalhes de Hoje
           </button>
-          <button 
+          <button
             className={`${styles.tabButton} ${activeTab === "previsao" ? styles.activeTab : ""}`}
             onClick={() => setActiveTab("previsao")}
           >
@@ -102,7 +111,7 @@ export function WeatherDashboard({
         </div>
 
         <AnimatePresence mode="wait">
-          <motion.div 
+          <motion.div
             key={activeTab}
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -111,7 +120,7 @@ export function WeatherDashboard({
             className={styles.cardsContainer}
           >
             {activeTab === "hoje" && (
-              <motion.div 
+              <motion.div
                 className={styles.tabContent}
                 variants={containerVariants}
                 initial="hidden"
@@ -123,13 +132,16 @@ export function WeatherDashboard({
                   </motion.div>
                 )}
 
-                <motion.div className={styles.gridContainer} variants={itemVariants}>
+                <motion.div
+                  className={styles.gridContainer}
+                  variants={itemVariants}
+                >
                   {weather && (
                     <div className={styles.sunArcWrapper}>
                       <SunArcCard weather={weather} />
                     </div>
                   )}
-                  
+
                   <div className={styles.moonPhaseWrapper}>
                     <MoonPhaseCard />
                   </div>
@@ -146,7 +158,7 @@ export function WeatherDashboard({
                     </div>
                   )}
                 </motion.div>
-                
+
                 {weather && (
                   <motion.div variants={itemVariants}>
                     <WeatherRadar weather={weather} />
@@ -156,7 +168,7 @@ export function WeatherDashboard({
             )}
 
             {activeTab === "previsao" && (
-              <motion.div 
+              <motion.div
                 className={styles.tabContent}
                 variants={containerVariants}
                 initial="hidden"
@@ -164,13 +176,19 @@ export function WeatherDashboard({
               >
                 {extendedForecast && (
                   <motion.div variants={itemVariants}>
-                    <ExtendedForecastCard forecast={extendedForecast} unit={unit} />
+                    <ExtendedForecastCard
+                      forecast={extendedForecast}
+                      unit={unit}
+                    />
                   </motion.div>
                 )}
 
                 {extendedForecast && (
                   <motion.div variants={itemVariants}>
-                    <TemperatureTrendChart forecast={extendedForecast} unit={unit} />
+                    <TemperatureTrendChart
+                      forecast={extendedForecast}
+                      unit={unit}
+                    />
                   </motion.div>
                 )}
 
@@ -188,7 +206,7 @@ export function WeatherDashboard({
   }
 
   if (!loading && !error) {
-    return <EmptyState />;
+    return <EmptyState onSearch={onSearch} />;
   }
 
   return null;

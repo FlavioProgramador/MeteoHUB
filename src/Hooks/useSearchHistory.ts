@@ -1,4 +1,6 @@
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
+import { useAuth } from "../Contexts/AuthContext";
+import { backendApi } from "../Services/backend";
 import { useLocalStorage } from "./useLocalStorage";
 
 const STORAGE_KEY = "meteohub_search_history";
@@ -6,34 +8,70 @@ const MAX_HISTORY = 5;
 
 export function useSearchHistory() {
   const [history, setHistory] = useLocalStorage<string[]>(STORAGE_KEY, []);
+  const { isAuthenticated } = useAuth();
 
-  // Adiciona cidade ao histórico (mais recente primeiro, sem duplicatas)
-  const addToHistory = useCallback((city: string) => {
-    const trimmed = city.trim();
-    if (!trimmed) return;
-    setHistory((prev) => {
-      const filtered = prev.filter(
-        (c) => c.toLowerCase() !== trimmed.toLowerCase()
-      );
-      const next = [trimmed, ...filtered].slice(0, MAX_HISTORY);
-      return next;
-    });
-  }, [setHistory]);
+  useEffect(() => {
+    if (isAuthenticated) {
+      backendApi
+        .get("/history")
+        .then((res) => {
+          if (res.data.success) {
+            const apiHistory = res.data.data.map((h: any) => h.cityName);
+            setHistory(apiHistory.slice(0, MAX_HISTORY));
+          }
+        })
+        .catch(console.error);
+    }
+  }, [isAuthenticated, setHistory]);
 
-  // Remove uma cidade específica do histórico
-  const removeFromHistory = useCallback((city: string) => {
-    setHistory((prev) => {
-      const next = prev.filter(
-        (c) => c.toLowerCase() !== city.toLowerCase()
-      );
-      return next;
-    });
-  }, [setHistory]);
+  const addToHistory = useCallback(
+    async (city: string) => {
+      const trimmed = city.trim();
+      if (!trimmed) return;
 
-  // Limpa todo o histórico
-  const clearHistory = useCallback(() => {
+      if (isAuthenticated) {
+        try {
+          await backendApi.post("/history", {
+            cityId: trimmed,
+            cityName: trimmed,
+            country: "BR",
+            lat: 0,
+            lon: 0,
+          });
+        } catch (err) {
+          console.error("Erro ao salvar histórico", err);
+        }
+      }
+
+      setHistory((prev) => {
+        const filtered = prev.filter(
+          (c) => c.toLowerCase() !== trimmed.toLowerCase(),
+        );
+        return [trimmed, ...filtered].slice(0, MAX_HISTORY);
+      });
+    },
+    [isAuthenticated, setHistory],
+  );
+
+  const removeFromHistory = useCallback(
+    (city: string) => {
+      setHistory((prev) => {
+        return prev.filter((c) => c.toLowerCase() !== city.toLowerCase());
+      });
+    },
+    [setHistory],
+  );
+
+  const clearHistory = useCallback(async () => {
+    if (isAuthenticated) {
+      try {
+        await backendApi.delete("/history");
+      } catch (err) {
+        console.error("Erro ao limpar histórico", err);
+      }
+    }
     setHistory([]);
-  }, [setHistory]);
+  }, [isAuthenticated, setHistory]);
 
   return { history, addToHistory, removeFromHistory, clearHistory };
 }
