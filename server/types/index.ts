@@ -1,29 +1,30 @@
-import { Request } from 'express'
+import { Request } from "express";
 
 export interface UserPayload {
-  id: string
-  email: string
+  id: string;
+  email: string;
+  name?: string | null;
 }
 
 export interface AuthenticatedRequest extends Request {
-  user?: UserPayload
+  user?: UserPayload;
 }
 
 export interface RegisterInput {
-  email: string
-  password: string
-  name?: string
+  email: string;
+  password: string;
+  name?: string;
 }
 
 export interface LoginInput {
-  email: string
-  password: string
+  email: string;
+  password: string;
 }
 
 export interface FavoriteCityInput {
-  cityId: string
-  cityName: string
-  country?: string
-  lat: number
-  lon: number
+  cityId: string;
+  cityName: string;
+  country?: string;
+  lat: number;
+  lon: number;
 }

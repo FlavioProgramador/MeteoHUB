@@ -17,7 +17,7 @@ const setTokenCookie = (res: Response, token: string) => {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 dias
+    maxAge: 7 * 24 * 60 * 60 * 1000,
   });
 };
 
@@ -70,4 +70,17 @@ export const getProfile = async (
   const user = await getUserById(req.user.id);
 
   sendSuccess(res, user);
+};
+export const logout = async (
+  req: AuthenticatedRequest,
+  res: Response,
+): Promise<void> => {
+  res.cookie("token", "", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    expires: new Date(0), 
+  });
+
+  sendSuccess(res, null, "Logout realizado com sucesso");
 };
