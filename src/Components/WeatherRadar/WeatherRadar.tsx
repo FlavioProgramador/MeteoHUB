@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import {
   MapContainer,
   TileLayer,
@@ -37,6 +37,12 @@ export const WeatherRadar = ({ weather }: WeatherRadarProps) => {
   const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
   const position: [number, number] = [weather.coord.lat, weather.coord.lon];
 
+  // Strings definidas aqui para evitar erro de parse no JSX:
+  const urlChuva = "https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=" + API_KEY;
+  const urlNuvens = "https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=" + API_KEY;
+  const urlTemp = "https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=" + API_KEY;
+  const urlWindow = "https://tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid=" + API_KEY;
+
   return (
     <div className={styles.radarCard}>
       <header className={styles.header}>
@@ -44,7 +50,7 @@ export const WeatherRadar = ({ weather }: WeatherRadarProps) => {
           <MapIcon size={20} className={styles.icon} />
           <h3 className={styles.title} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             Radar Climático
-            <InfoTooltip content="O radar exibe visualmente as condições climáticas atuais, como nuvens e precipitação, sobre o mapa." />
+            <InfoTooltip content="O radar exibe visualmente as condições climáticas atuais." />
           </h3>
         </div>
         <div className={styles.layerInfo}>
@@ -64,32 +70,22 @@ export const WeatherRadar = ({ weather }: WeatherRadarProps) => {
           <LayersControl position="topright">
             <LayersControl.BaseLayer checked name="Mapa Padrão">
               <TileLayer
-                attribution='&amp;copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                attribution='&amp;copy; OpenStreetMap'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               />
             </LayersControl.BaseLayer>
 
-            <LayersControl.BaseLayer name="Modo Escuro">
-              <TileLayer
-                attribution='&amp;copy; <a href="https://carto.com/">CARTO</a>'
-                url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-              />
-            </LayersControl.BaseLayer>
-
             <LayersControl.Overlay checked name="Precipitação (Chuva)">
-              <TileLayer
-                attribution="Meteorologia por OpenWeatherMap"
-                url={`https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=${API_KEY}`}
-                opacity={0.8}
-              />
+              <TileLayer attribution="Meteorologia por OpenWeatherMap" url={urlChuva} opacity={0.8} />
             </LayersControl.Overlay>
-
             <LayersControl.Overlay name="Camada de Nuvens">
-              <TileLayer
-                attribution="Meteorologia por OpenWeatherMap"
-                url={`https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=${API_KEY}`}
-                opacity={0.8}
-              />
+              <TileLayer attribution="Meteorologia por OpenWeatherMap" url={urlNuvens} opacity={0.8} />
+            </LayersControl.Overlay>
+            <LayersControl.Overlay name="Mapa de Temperatura">
+              <TileLayer attribution="Meteorologia por OpenWeatherMap" url={urlTemp} opacity={0.65} />
+            </LayersControl.Overlay>
+            <LayersControl.Overlay name="Camada de Vento">
+              <TileLayer attribution="Meteorologia por OpenWeatherMap" url={urlWindow} opacity={0.65} />
             </LayersControl.Overlay>
           </LayersControl>
           <Marker position={position} icon={customIcon} />
