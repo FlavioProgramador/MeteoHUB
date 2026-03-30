@@ -1,3 +1,4 @@
+﻿import { prisma } from '../utils/prisma.js';
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import jwt, { Secret } from "jsonwebtoken";
@@ -27,7 +28,7 @@ export const registerUser = async (
 
   const existingUser = await userRepository.findByEmail(email);
   if (existingUser) {
-    throw new ConflictError("Email já cadastrado");
+    throw new ConflictError("Email jÃ¡ cadastrado");
   }
 
   const passwordHash = await bcrypt.hash(password, 10);
@@ -57,12 +58,12 @@ export const loginUser = async (input: LoginInput): Promise<AuthResult> => {
 
   const user = await userRepository.findByEmail(email);
   if (!user) {
-    throw new UnauthorizedError("Credenciais inválidas");
+    throw new UnauthorizedError("Credenciais invÃ¡lidas");
   }
 
   const isValidPassword = await bcrypt.compare(password, user.passwordHash);
   if (!isValidPassword) {
-    throw new UnauthorizedError("Credenciais inválidas");
+    throw new UnauthorizedError("Credenciais invÃ¡lidas");
   }
 
   const accessToken = generateAccessToken({
@@ -82,7 +83,7 @@ export const loginUser = async (input: LoginInput): Promise<AuthResult> => {
 export const getUserById = async (id: string) => {
   const user = await userRepository.findById(id);
   if (!user) {
-    throw new NotFoundError("Usuário não encontrado");
+    throw new NotFoundError("UsuÃ¡rio nÃ£o encontrado");
   }
   return user;
 };
@@ -124,7 +125,7 @@ export const refreshTokens = async (
     if (storedToken) {
       await prisma.refreshToken.delete({ where: { id: storedToken.id } });
     }
-    throw new UnauthorizedError("Refresh token inválido ou expirado");
+    throw new UnauthorizedError("Refresh token invÃ¡lido ou expirado");
   }
 
   await prisma.refreshToken.delete({ where: { id: storedToken.id } });
@@ -143,3 +144,62 @@ export const refreshTokens = async (
     refreshToken: newRefreshToken,
   };
 };
+import nodemailer from 'nodemailer';
+
+export const generatePasswordReset = async (email: string) => {
+  const user = await userRepository.findByEmail(email);
+  if (!user) return; // NÃ£o envia erro para evitar name enumeration
+  
+  const resetToken = jwt.sign(
+    { id: user.id }, 
+    (process.env.JWT_SECRET || 'secret') + user.passwordHash, 
+    { expiresIn: '1h' }
+  );
+  
+  const resetLink = "http://localhost:5174/reset-password?token=${resetToken}&id=${user.id}";
+  
+  console.log('====== MOCK DE EMAIL DE RECUPERAÃ‡ÃƒO ======');
+  console.log(Para recuperar a senha de ${email}, acesse:);
+  console.log(resetLink);
+  console.log('==========================================');
+
+  // Caso tenha variÃ¡veis de env:
+  if (process.env.SMTP_USER && process.env.SMTP_PASS) {
+      const transporter = nodemailer.createTransport({
+          service: 'gmail',
+          auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS }
+      });
+      await transporter.sendMail({
+          from: "MeteoHUB" <>,
+          to: email,
+          subject: 'RecuperaÃ§Ã£o de Senha - MeteoHUB',
+          text: Acesse este link para recriar sua senha:  \n\nVÃ¡lido por 1 hora.
+      });
+  }
+};
+
+export const resetPasswordByToken = async (token: string, newPassword: string) => {
+  try {
+     const decoded: any = jwt.decode(token);
+     if (!decoded || !decoded.id) throw new Error('Token invÃ¡lido');
+     const user = await userRepository.findById(decoded.id);
+     if (!user) throw new Error('UsuÃ¡rio nÃ£o encontrado');
+
+     // Verifica validade do token (hash Ã© anexado para garantir que a senha antiga ainda era a mesma quando o token foi emitido)
+     jwt.verify(token, (process.env.JWT_SECRET || 'secret') + user.passwordHash) as unknown;
+
+     const newPasswordHash = await bcrypt.hash(newPassword, 10);
+     
+     // Chamada via prisma direto por praticidade:
+     
+     await prisma.user.update({
+        where: { id: user.id },
+        data: { passwordHash: newPasswordHash }
+     });
+
+  } catch (err) {
+      throw new UnauthorizedError('Token de recuperaÃ§Ã£o invÃ¡lido ou expirado');
+  }
+};
+
+

@@ -135,3 +135,17 @@ export const logout = async (
 
   sendSuccess(res, null, "Logout realizado com sucesso");
 };
+
+export const forgotPassword = async (req: Request, res: Response): Promise<void> => {
+  const { email } = req.body;
+  if (!email) throw new Error("Email é obrigatório");
+  await authService.generatePasswordReset(email);
+  sendSuccess(res, null, "Se o email existir, um link de recuperação foi enviado.");
+};
+
+export const resetPassword = async (req: Request, res: Response): Promise<void> => {
+  const { token, newPassword } = req.body;
+  if (!token || !newPassword) throw new Error("Token e nova senha são obrigatórios");
+  await authService.resetPasswordByToken(token, newPassword);
+  sendSuccess(res, null, "Senha atualizada com sucesso.");
+};
