@@ -28,7 +28,7 @@ export const SearchBar = ({
       skipNextSuggestion.current = true;
       setSearchTerm(searchedCity);
     }
-  }, [searchedCity]);
+  }, [searchedCity, searchTerm]);
 
   useEffect(() => {
     if (skipNextSuggestion.current) {

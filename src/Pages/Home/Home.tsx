@@ -56,8 +56,7 @@ export function Home() {
     fetchExtendedForecast(weather.coord.lat, weather.coord.lon, weather.name);
   }, [
     unit,
-    weather?.coord?.lat,
-    weather?.coord?.lon,
+    weather?.coord,
     weather?.name,
     fetchExtendedForecast,
   ]);

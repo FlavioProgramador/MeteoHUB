@@ -29,7 +29,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (response.data?.success && response.data.data) {
           setUser(response.data.data);
         }
-      } catch (error) {
+      } catch (_error) {
         console.error("Not authenticated");
       } finally {
         setLoading(false);
