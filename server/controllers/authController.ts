@@ -5,7 +5,9 @@ import {
   loginUser,
   registerUser,
   refreshTokens,
-  revokeRefreshToken
+  revokeRefreshToken,
+  generatePasswordReset,
+  resetPasswordByToken
 } from "../services/authService.js";
 import { AuthenticatedRequest } from "../types/index.js";
 import { UnauthorizedError, ValidationError } from "../utils/errors.js";
@@ -138,14 +140,14 @@ export const logout = async (
 
 export const forgotPassword = async (req: Request, res: Response): Promise<void> => {
   const { email } = req.body;
-  if (!email) throw new Error("Email È obrigatÛrio");
-  await authService.generatePasswordReset(email);
-  sendSuccess(res, null, "Se o email existir, um link de recuperaÁ„o foi enviado.");
+  if (!email) throw new Error("Email √© obrigat√≥rio");
+  await generatePasswordReset(email);
+  sendSuccess(res, null, "Se o email existir, um link de recupera√ß√£o foi enviado.");
 };
 
 export const resetPassword = async (req: Request, res: Response): Promise<void> => {
   const { token, newPassword } = req.body;
-  if (!token || !newPassword) throw new Error("Token e nova senha s„o obrigatÛrios");
-  await authService.resetPasswordByToken(token, newPassword);
+  if (!token || !newPassword) throw new Error("Token e nova senha s√£o obrigat√≥rios");
+  await resetPasswordByToken(token, newPassword);
   sendSuccess(res, null, "Senha atualizada com sucesso.");
 };
