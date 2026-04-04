@@ -1,6 +1,6 @@
 import { Search } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
-import { getCitySuggestions } from "../../Services/api";
+import { getCitySuggestions } from "../../Services/openWeatherApi";
 import type { CitySuggestion } from "../../Types/geocoding";
 
 interface SearchBarProps {

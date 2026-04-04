@@ -1,7 +1,7 @@
 import { useState, useCallback, useRef } from 'react';
 import type { WeatherData, AirPollutionData, UVIndexData } from '../Types/weather';
 import type { ForecastData } from '../Types/forecast';
-import { getWeatherByAPI, getWeatherByCoordinates, getForecastByAPI, getForecastByCoordinates, getAirPollutionByCoordinates, getUVIndexByCoordinates } from '../Services/api';
+import { getWeatherByAPI, getWeatherByCoordinates, getForecastByAPI, getForecastByCoordinates, getAirPollutionByCoordinates, getUVIndexByCoordinates } from '../Services/openWeatherApi';
 
 export function useWeather(unit: 'metric' | 'imperial') {
   const [weather, setWeather] = useState<WeatherData | null>(null);

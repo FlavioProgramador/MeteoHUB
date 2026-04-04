@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import type { ExtendedForecastData } from '../Types/extendedForecast';
-import { getExtendedForecast } from '../Services/api';
+import { getExtendedForecast } from '../Services/openWeatherApi';
 
 export function useExtendedForecast(unit: 'metric' | 'imperial') {
   const [extendedForecast, setExtendedForecast] = useState<ExtendedForecastData | null>(null);
