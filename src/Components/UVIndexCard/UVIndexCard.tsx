@@ -1,6 +1,6 @@
 import type { UVIndexData } from "../../Types/weather";
 import styles from "./UVIndexCard.module.css";
-import { FiSun } from "react-icons/fi";
+import { Sun } from "lucide-react";
 
 interface UVIndexCardProps {
   data: UVIndexData;
@@ -12,37 +12,35 @@ export function UVIndexCard({ data }: UVIndexCardProps) {
   const uvValue = data.value;
 
   let label = "Baixo";
-  let color = "#4CAF50"; // Green
+  let color = "#4CAF50"; 
   let textColor = "#fff";
   let description = "Seguro para ficar ao ar livre.";
 
   if (uvValue >= 11) {
     label = "Extremo";
-    color = "#9C27B0"; // Purple
-    // description same
+    color = "#9C27B0"; 
     description = "Risco extremo! Fique em local coberto e protegido.";
   } else if (uvValue >= 8) {
     label = "Muito Alto";
-    color = "#F44336"; // Red
+    color = "#F44336"; 
     description = "Evite o sol entre 10h e 16h. Muita proteção necessária!";
   } else if (uvValue >= 6) {
     label = "Alto";
-    color = "#FF9800"; // Orange
+    color = "#FF9800"; 
     description = "Necessário proteção (chapéu, óculos, protetor FPS 30+).";
   } else if (uvValue >= 3) {
     label = "Moderado";
-    color = "#FFEB3B"; // Yellow
+    color = "#FFEB3B"; 
     textColor = "#333";
     description = "Use protetor solar se exposto por muito tempo.";
   }
 
-  // Progress bar calculation based on a max scale of roughly 15
   const progressPercent = Math.min((uvValue / 15) * 100, 100);
 
   return (
     <div className={styles.uvCard}>
       <h3 className={styles.title}>
-        <FiSun className={styles.icon} />
+        <Sun size={24} />
         Índice UV
       </h3>
 

@@ -1,4 +1,4 @@
-import { FiWind } from "react-icons/fi";
+import { Wind } from "lucide-react";
 import type { AirPollutionData } from "../../Types/weather";
 import styles from "./AirQualityCard.module.css";
 
@@ -40,7 +40,7 @@ export function AirQualityCard({ data }: AirQualityCardProps) {
         }}
       >
         <h3 className={styles.title} style={{ margin: 0 }}>
-          <FiWind className={styles.icon} /> Qualidade do Ar
+          <Wind size={24} /> Qualidade do Ar
         </h3>
         <InfoTooltip
           content={
