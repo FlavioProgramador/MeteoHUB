@@ -1,8 +1,6 @@
-﻿import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import "../../App.css";
 
-import { useAuth } from "../../Contexts/AuthContext";
 import { useExtendedForecast } from "../../Hooks/useExtendedForecast";
 import { useFavorites } from "../../Hooks/useFavorites";
 import { useSearchHistory } from "../../Hooks/useSearchHistory";
@@ -19,8 +17,6 @@ import { WeatherBackground } from "../../Components/WeatherBackground/WeatherBac
 import { WeatherDashboard } from "../../Components/WeatherDashboard/WeatherDashboard";
 
 export function Home() {
-  const { isAuthenticated } = useAuth();
-  const navigate = useNavigate();
   const [unit, setUnit] = useState<"metric" | "imperial">("metric");
   const [searchedCity, setSearchedCity] = useState("");
 
@@ -74,26 +70,14 @@ export function Home() {
   };
 
   const handleCitySearch = (city: string) => {
-    if (!isAuthenticated) {
-      navigate("/login");
-      return;
-    }
     fetchWeatherByCity(city, handleSearchSuccess);
   };
 
   const handleCoordsSearch = (lat: number, lon: number) => {
-    if (!isAuthenticated) {
-      navigate("/login");
-      return;
-    }
     fetchWeatherByCoords(lat, lon, handleSearchSuccess);
   };
 
   const onLocationClick = () => {
-    if (!isAuthenticated) {
-      navigate("/login");
-      return;
-    }
     handleLocation({
       onSuccess: handleCoordsSearch,
       onError: setError,
@@ -109,7 +93,7 @@ export function Home() {
 
   return (
     <div className="app-container">
-      {weather && isAuthenticated && (
+      {weather && (
         <WeatherBackground condition={weather.weather[0].main} />
       )}
 
@@ -124,10 +108,6 @@ export function Home() {
         onSuggestionClick={handleCoordsSearch}
         onLocationClick={onLocationClick}
         onToggleFavorite={(city: string) => {
-          if (!isAuthenticated) {
-            navigate("/login");
-            return;
-          }
           if (isFavorite(city)) {
             removeFavorite(city);
           } else {
@@ -141,11 +121,11 @@ export function Home() {
       />
 
       <WeatherDashboard
-        weather={isAuthenticated ? weather : null}
-        forecast={isAuthenticated ? forecast : null}
-        airPollution={isAuthenticated ? airPollution : null}
-        uvIndex={isAuthenticated ? uvIndex : null}
-        extendedForecast={isAuthenticated ? extendedForecast : null}
+        weather={weather}
+        forecast={forecast}
+        airPollution={airPollution}
+        uvIndex={uvIndex}
+        extendedForecast={extendedForecast}
         unit={unit}
         loading={loading}
         error={error}
