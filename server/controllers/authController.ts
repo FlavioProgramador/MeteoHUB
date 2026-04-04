@@ -5,7 +5,9 @@ import {
   loginUser,
   registerUser,
   refreshTokens,
-  revokeRefreshToken
+  revokeRefreshToken,
+  generatePasswordReset,
+  resetPasswordByToken
 } from "../services/authService.js";
 import { AuthenticatedRequest } from "../types/index.js";
 import { UnauthorizedError, ValidationError } from "../utils/errors.js";
@@ -30,19 +32,19 @@ const loginSchema = z.object({
 });
 
 const setTokenCookies = (res: Response, accessToken: string, refreshToken: string) => {
-  const isProd = process.env.NODE_ENV === "production";
+  const isProd = process.env.NODE_ENV === "production" || process.env.VERCEL === "1";
   
   res.cookie("token", accessToken, {
     httpOnly: true,
-    secure: isProd,
-    sameSite: "strict",
+    secure: true,
+    sameSite: "none",
     maxAge: 15 * 60 * 1000, // 15 minutes
   });
 
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
-    secure: isProd,
-    sameSite: "strict",
+    secure: true,
+    sameSite: "none",
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
   });
 };
@@ -134,4 +136,18 @@ export const logout = async (
   });
 
   sendSuccess(res, null, "Logout realizado com sucesso");
+};
+
+export const forgotPassword = async (req: Request, res: Response): Promise<void> => {
+  const { email } = req.body;
+  if (!email) throw new Error("Email é obrigatório");
+  await generatePasswordReset(email);
+  sendSuccess(res, null, "Se o email existir, um link de recuperação foi enviado.");
+};
+
+export const resetPassword = async (req: Request, res: Response): Promise<void> => {
+  const { token, newPassword } = req.body;
+  if (!token || !newPassword) throw new Error("Token e nova senha são obrigatórios");
+  await resetPasswordByToken(token, newPassword);
+  sendSuccess(res, null, "Senha atualizada com sucesso.");
 };

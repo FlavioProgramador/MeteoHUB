@@ -27,10 +27,11 @@ export function Login() {
         login(response.data.data.user);
         navigate("/");
       }
-    } catch (err: any) {
-      setError(
-        err.response?.data?.error || "Erro ao fazer login. Tente novamente.",
-      );
+    } catch (err: unknown) {
+      const errorMsg =
+        (err as { response?: { data?: { error?: string } } })?.response?.data
+          ?.error || "Erro ao fazer login. Tente novamente.";
+      setError(errorMsg);
     } finally {
       setIsLoading(false);
     }

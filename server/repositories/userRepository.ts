@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import prisma from "../utils/prisma.js";
 
 export class UserRepository {
@@ -18,7 +19,7 @@ export class UserRepository {
     });
   }
 
-  async create(data: any) {
+  async create(data: Prisma.UserCreateInput) {
     return await prisma.user.create({ data });
   }
 }

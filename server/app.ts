@@ -23,7 +23,22 @@ app.use("/api/", limiter);
 
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN || "http://localhost:5173",
+    origin: (origin, callback) => {
+      // Lista de origens permitidas (localhosts e domínios Vercel)
+      const allowedOrigins = [
+        "http://localhost:5173",
+        "http://localhost:5174",
+        "http://localhost:3000",
+        "https://meteo-hub.vercel.app"
+      ];
+      
+      // Permitir requisições sem origem (como do Postman) ou permitidas
+      if (!origin || allowedOrigins.includes(origin) || process.env.CORS_ORIGIN === "*") {
+        callback(null, true);
+      } else {
+        callback(new Error("Bloqueado pelo CORS"));
+      }
+    },
     credentials: true,
   }),
 );

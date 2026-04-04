@@ -19,6 +19,7 @@ import { UVIndexCard } from "../UVIndexCard/UVIndexCard";
 import { WeatherAlert } from "../WeatherAlert/WeatherAlert";
 import WeatherCard from "../WeatherCard/WeatherCard";
 import { WeatherRadar } from "../WeatherRadar/WeatherRadar";
+import { WeatherDetailsGrid } from "./WeatherDetailsGrid";
 import styles from "./WeatherDashboard.module.css";
 
 const containerVariants = {
@@ -132,31 +133,13 @@ export function WeatherDashboard({
                   </motion.div>
                 )}
 
-                <motion.div
-                  className={styles.gridContainer}
-                  variants={itemVariants}
-                >
-                  {weather && (
-                    <div className={styles.sunArcWrapper}>
-                      <SunArcCard weather={weather} />
-                    </div>
-                  )}
-
-                  <div className={styles.moonPhaseWrapper}>
-                    <MoonPhaseCard />
-                  </div>
-
-                  {uvIndex && (
-                    <div className={styles.uvIndexWrapper}>
-                      <UVIndexCard data={uvIndex} />
-                    </div>
-                  )}
-
-                  {airPollution && (
-                    <div className={styles.airQualityWrapper}>
-                      <AirQualityCard data={airPollution} />
-                    </div>
-                  )}
+                <motion.div variants={itemVariants}>
+                  <WeatherDetailsGrid
+                    weather={weather}
+                    uvIndex={uvIndex}
+                    airPollution={airPollution}
+                    styles={styles}
+                  />
                 </motion.div>
 
                 {weather && (

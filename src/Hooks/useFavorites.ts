@@ -16,7 +16,7 @@ export function useFavorites() {
         .get("/favorites")
         .then((res) => {
           if (res.data.success) {
-            const apiFavorites = res.data.data.map((fav: any) => fav.cityName);
+            const apiFavorites = res.data.data.map((fav: { cityName: string }) => fav.cityName);
             setFavorites(apiFavorites);
           }
         })

@@ -16,7 +16,7 @@ export function useSearchHistory() {
         .get("/history")
         .then((res) => {
           if (res.data.success) {
-            const apiHistory = res.data.data.map((h: any) => h.cityName);
+            const apiHistory = res.data.data.map((h: { cityName: string }) => h.cityName);
             setHistory(apiHistory.slice(0, MAX_HISTORY));
           }
         })

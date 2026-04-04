@@ -35,10 +35,11 @@ export function Register() {
         login(response.data.data.user);
         navigate("/");
       }
-    } catch (err: any) {
-      setError(
-        err.response?.data?.error || "Erro ao criar conta. Tente novamente.",
-      );
+    } catch (err: unknown) {
+      const errorMsg =
+        (err as { response?: { data?: { error?: string } } })?.response?.data
+          ?.error || "Erro ao criar conta. Tente novamente.";
+      setError(errorMsg);
     } finally {
       setIsLoading(false);
     }

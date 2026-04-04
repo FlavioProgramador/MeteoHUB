@@ -6,6 +6,7 @@ import { useFavorites } from "../../Hooks/useFavorites";
 import { useSearchHistory } from "../../Hooks/useSearchHistory";
 import { useTheme } from "../../Hooks/useTheme";
 import { useWeather } from "../../Hooks/useWeather";
+import { useUpdateWeatherBackground } from "../../Hooks/useUpdateWeatherBackground";
 import {
   handleGeolocation,
   type GeolocationCallbacks,
@@ -44,22 +45,14 @@ export function Home() {
 
   const { extendedForecast, fetchExtendedForecast } = useExtendedForecast(unit);
 
-  useEffect(() => {
-    if (weather && weather.weather && weather.weather.length > 0) {
-      const condition = weather.weather[0].main.toLowerCase();
-      document.documentElement.setAttribute("data-weather", condition);
-    } else {
-      document.documentElement.removeAttribute("data-weather");
-    }
-  }, [weather]);
+  useUpdateWeatherBackground(weather);
 
   useEffect(() => {
     if (!weather?.coord) return;
     fetchExtendedForecast(weather.coord.lat, weather.coord.lon, weather.name);
   }, [
     unit,
-    weather?.coord?.lat,
-    weather?.coord?.lon,
+    weather?.coord,
     weather?.name,
     fetchExtendedForecast,
   ]);
