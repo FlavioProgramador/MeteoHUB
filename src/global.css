@@ -33,6 +33,9 @@
   --alert-danger-text: #991b1b;
   --alert-warning-text: #b45309;
 
+  /* Skeletons */
+  --card-skeleton-shine: rgba(255, 255, 255, 0.8);
+
   /* Fontes e animações globais */
   --font-family: "Outfit", sans-serif;
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -61,6 +64,9 @@
   /* Alertas */
   --alert-danger-text: #fecaca;
   --alert-warning-text: #fde68a;
+
+  /* Skeletons */
+  --card-skeleton-shine: rgba(51, 65, 85, 0.8);
 }
 
 /* --- ESTILOS DINÂMICOS BASEADOS NO CLIMA --- */
