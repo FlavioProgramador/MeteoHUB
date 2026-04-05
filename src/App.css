@@ -22,6 +22,8 @@
   align-items: center;
   gap: 1rem;
   width: 100%;
+  position: relative;
+  z-index: 10;
 }
 
 .searchForm {
@@ -35,11 +37,14 @@
   transition: var(--transition);
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
   backdrop-filter: var(--card-backdrop);
+  position: relative;
+  overflow: visible;
 }
 
 .searchForm:focus-within {
   border-color: var(--input-border);
-  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1), 0 4px 12px -2px rgba(59, 130, 246, 0.15);
+  z-index: 100;
 }
 
 .searchInput {
@@ -52,30 +57,41 @@
   padding: 0.75rem 0.5rem;
   font-family: inherit;
   transition: var(--transition);
+  box-shadow: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.searchInput:focus {
+  outline: none;
+  border: none;
+  box-shadow: none;
 }
 
 .searchWrapper {
   position: relative;
   flex: 1;
   display: flex;
+  overflow: visible;
 }
 
 .suggestionsList {
   position: absolute;
-  top: 100%;
-  left: 0;
-  width: 100%;
+  top: calc(100% + 8px);
+  left: -1rem;
+  right: -1rem;
   background: var(--card-bg-glass);
   backdrop-filter: var(--card-backdrop);
   border: 1px solid var(--card-border);
   border-radius: 12px;
   max-height: 250px;
   overflow-y: auto;
-  z-index: 50;
+  z-index: 1000;
   padding: 0;
-  margin: 0.5rem 0 0 0;
+  margin: 0;
   list-style: none;
-  box-shadow: var(--card-shadow);
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.3);
 }
 
 .suggestionsList li {

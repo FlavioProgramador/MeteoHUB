@@ -10,6 +10,8 @@
   border-radius: 14px;
   backdrop-filter: var(--card-backdrop);
   animation: slideDown 0.25s ease-out;
+  position: relative;
+  z-index: 1;
 }
 
 @keyframes slideDown {
