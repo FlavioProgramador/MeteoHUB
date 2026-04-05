@@ -12,6 +12,7 @@ import EmptyState from "../EmptyState/EmptyState";
 import ExtendedForecastCard from "../ExtendedForecastCard/ExtendedForecastCard";
 import { MoonPhaseCard } from "../MoonPhaseCard/MoonPhaseCard";
 import RainProbabilityCard from "../RainProbabilityCard/RainProbabilityCard";
+import { Skeleton } from "../Skeleton/Skeleton";
 import { SunArcCard } from "../SunArcCard/SunArcCard";
 import TemperatureChart from "../TemperatureChart/TemperatureChart";
 import TemperatureTrendChart from "../TemperatureTrendChart/TemperatureTrendChart";
@@ -96,16 +97,24 @@ export function WeatherDashboard({
           </motion.div>
         )}
 
-        <div className={styles.tabsContainer}>
+        <div className={styles.tabsContainer} role="tablist" aria-label="Seções da previsão">
           <button
             className={`${styles.tabButton} ${activeTab === "hoje" ? styles.activeTab : ""}`}
             onClick={() => setActiveTab("hoje")}
+            role="tab"
+            aria-selected={activeTab === "hoje"}
+            aria-controls="panel-hoje"
+            id="tab-hoje"
           >
             Detalhes de Hoje
           </button>
           <button
             className={`${styles.tabButton} ${activeTab === "previsao" ? styles.activeTab : ""}`}
             onClick={() => setActiveTab("previsao")}
+            role="tab"
+            aria-selected={activeTab === "previsao"}
+            aria-controls="panel-previsao"
+            id="tab-previsao"
           >
             Previsão Estendida
           </button>
@@ -126,6 +135,10 @@ export function WeatherDashboard({
                 variants={containerVariants}
                 initial="hidden"
                 animate="visible"
+                role="tabpanel"
+                id="panel-hoje"
+                aria-labelledby="tab-hoje"
+                tabIndex={0}
               >
                 {forecast && (
                   <motion.div variants={itemVariants}>
@@ -156,6 +169,10 @@ export function WeatherDashboard({
                 variants={containerVariants}
                 initial="hidden"
                 animate="visible"
+                role="tabpanel"
+                id="panel-previsao"
+                aria-labelledby="tab-previsao"
+                tabIndex={0}
               >
                 {extendedForecast && (
                   <motion.div variants={itemVariants}>
@@ -190,6 +207,26 @@ export function WeatherDashboard({
 
   if (!loading && !error) {
     return <EmptyState onSearch={onSearch} />;
+  }
+
+  if (loading) {
+    return (
+      <div className={styles.dashboardWrapper} aria-busy="true" aria-label="Carregando dados do clima">
+        <Skeleton variant="card" style={{ marginBottom: "1rem" }}>
+          <Skeleton variant="title" />
+          <Skeleton variant="subtitle" />
+          <Skeleton variant="row" />
+        </Skeleton>
+        <div className={styles.tabsContainer}>
+          <Skeleton variant="subtitle" />
+          <Skeleton variant="subtitle" />
+        </div>
+        <div className={styles.cardsContainer}>
+          <Skeleton variant="card" />
+          <Skeleton variant="card" />
+        </div>
+      </div>
+    );
   }
 
   return null;
