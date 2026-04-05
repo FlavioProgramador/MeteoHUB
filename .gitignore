@@ -9,6 +9,8 @@ node_modules/
 dist/
 dist-ssr/
 build/
+*.tsbuildinfo
+.tmp/
 
 # =========================
 # Environment variables
@@ -38,13 +40,23 @@ lerna-debug.log*
 # =========================
 .vscode/*
 !.vscode/extensions.json
+!.vscode/settings.json
 .idea/
+*.swp
+*.swo
+*~
 
 # =========================
 # OS files
 # =========================
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
+desktop.ini
 
 # =========================
 # Temporary / misc
@@ -57,6 +69,8 @@ Thumbs.db
 # Tests (HTML específico)
 # =========================
 test.html
+coverage/
+.nyc_output/
 
 # =========================
 # Prisma
@@ -70,7 +84,27 @@ prisma/*.db-journal
 .claude/
 
 # =========================
-# Skills
+# Skills (Copilot)
 # =========================
 skills/
 skills-lock.json
+
+# =========================
+# TypeScript
+# =========================
+*.tsbuildinfo
+
+# =========================
+# Vite
+# =========================
+.vite/
+
+# =========================
+# Vercel
+# =========================
+.vercel
+
+# =========================
+# ESLint Cache
+# =========================
+.eslintcache
