@@ -1,5 +1,4 @@
-﻿import { prisma } from '../utils/prisma.js';
-import bcrypt from "bcryptjs";
+﻿import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import jwt, { Secret } from "jsonwebtoken";
 import { userRepository } from "../repositories/userRepository.js";
@@ -28,7 +27,7 @@ export const registerUser = async (
 
   const existingUser = await userRepository.findByEmail(email);
   if (existingUser) {
-    throw new ConflictError("Email jÃ¡ cadastrado");
+    throw new ConflictError("Email já cadastrado");
   }
 
   const passwordHash = await bcrypt.hash(password, 10);
@@ -58,12 +57,12 @@ export const loginUser = async (input: LoginInput): Promise<AuthResult> => {
 
   const user = await userRepository.findByEmail(email);
   if (!user) {
-    throw new UnauthorizedError("Credenciais invÃ¡lidas");
+    throw new UnauthorizedError("Credenciais inválidas");
   }
 
   const isValidPassword = await bcrypt.compare(password, user.passwordHash);
   if (!isValidPassword) {
-    throw new UnauthorizedError("Credenciais invÃ¡lidas");
+    throw new UnauthorizedError("Credenciais inválidas");
   }
 
   const accessToken = generateAccessToken({
@@ -83,7 +82,7 @@ export const loginUser = async (input: LoginInput): Promise<AuthResult> => {
 export const getUserById = async (id: string) => {
   const user = await userRepository.findById(id);
   if (!user) {
-    throw new NotFoundError("UsuÃ¡rio nÃ£o encontrado");
+    throw new NotFoundError("Usuário não encontrado");
   }
   return user;
 };
@@ -125,7 +124,7 @@ export const refreshTokens = async (
     if (storedToken) {
       await prisma.refreshToken.delete({ where: { id: storedToken.id } });
     }
-    throw new UnauthorizedError("Refresh token invÃ¡lido ou expirado");
+    throw new UnauthorizedError("Refresh token inválido ou expirado");
   }
 
   await prisma.refreshToken.delete({ where: { id: storedToken.id } });
@@ -144,11 +143,12 @@ export const refreshTokens = async (
     refreshToken: newRefreshToken,
   };
 };
+
 import nodemailer from 'nodemailer';
 
 export const generatePasswordReset = async (email: string) => {
   const user = await userRepository.findByEmail(email);
-  if (!user) return; // NÃ£o envia erro para evitar name enumeration
+  if (!user) return; // Não envia erro para evitar name enumeration
   
   const resetToken = jwt.sign(
     { id: user.id }, 
@@ -156,24 +156,24 @@ export const generatePasswordReset = async (email: string) => {
     { expiresIn: '1h' }
   );
   
-  const resetLink = "http://localhost:5174/reset-password?token=${resetToken}&id=${user.id}";
+  const resetLink = `http://localhost:5174/reset-password?token=${resetToken}&id=${user.id}`;
   
-  console.log('====== MOCK DE EMAIL DE RECUPERAÃ‡ÃƒO ======');
-  console.log(Para recuperar a senha de ${email}, acesse:);
+  console.log('====== MOCK DE EMAIL DE RECUPERAÇÃO ======');
+  console.log(`Para recuperar a senha de ${email}, acesse:`);
   console.log(resetLink);
   console.log('==========================================');
 
-  // Caso tenha variÃ¡veis de env:
+  // Caso tenha variáveis de env:
   if (process.env.SMTP_USER && process.env.SMTP_PASS) {
       const transporter = nodemailer.createTransport({
           service: 'gmail',
           auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS }
       });
       await transporter.sendMail({
-          from: "MeteoHUB" <>,
+          from: '"MeteoHUB" <noreply@meteohub.com>',
           to: email,
-          subject: 'RecuperaÃ§Ã£o de Senha - MeteoHUB',
-          text: Acesse este link para recriar sua senha:  \n\nVÃ¡lido por 1 hora.
+          subject: 'Recuperação de Senha - MeteoHUB',
+          text: `Acesse este link para recriar sua senha: ${resetLink}\n\nVálido por 1 hora.`
       });
   }
 };
@@ -181,11 +181,11 @@ export const generatePasswordReset = async (email: string) => {
 export const resetPasswordByToken = async (token: string, newPassword: string) => {
   try {
      const decoded: any = jwt.decode(token);
-     if (!decoded || !decoded.id) throw new Error('Token invÃ¡lido');
+     if (!decoded || !decoded.id) throw new Error('Token inválido');
      const user = await userRepository.findById(decoded.id);
-     if (!user) throw new Error('UsuÃ¡rio nÃ£o encontrado');
+     if (!user) throw new Error('Usuário não encontrado');
 
-     // Verifica validade do token (hash Ã© anexado para garantir que a senha antiga ainda era a mesma quando o token foi emitido)
+     // Verifica validade do token (hash é anexado para garantir que a senha antiga ainda era a mesma quando o token foi emitido)
      jwt.verify(token, (process.env.JWT_SECRET || 'secret') + user.passwordHash) as unknown;
 
      const newPasswordHash = await bcrypt.hash(newPassword, 10);
@@ -198,7 +198,7 @@ export const resetPasswordByToken = async (token: string, newPassword: string) =
      });
 
   } catch (err) {
-      throw new UnauthorizedError('Token de recuperaÃ§Ã£o invÃ¡lido ou expirado');
+      throw new UnauthorizedError('Token de recuperação inválido ou expirado');
   }
 };
 
