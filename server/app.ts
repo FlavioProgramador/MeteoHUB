@@ -3,13 +3,18 @@ import cors from "cors";
 import express from "express";
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";
+import pinoHttp from "pino-http";
 import swaggerUi from "swagger-ui-express";
 import { csrfProtection } from "./middleware/csrf.js";
 import { errorBoundary } from "./middleware/errorBoundary.js";
 import routes from "./routes/index.js";
 import { swaggerSpec } from "./swagger.js";
+import { logger } from "./utils/logger.js";
 
 const app = express();
+
+// Structured logging for HTTP requests
+app.use(pinoHttp({ logger }));
 
 app.use(helmet());
 
