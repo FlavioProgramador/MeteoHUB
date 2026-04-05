@@ -57,6 +57,8 @@ export function Login() {
               padding: "10px",
               borderRadius: "8px",
             }}
+            role="alert"
+            aria-live="assertive"
           >
             {error}
           </div>

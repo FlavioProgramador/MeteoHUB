@@ -3,6 +3,7 @@ import "../../App.css";
 
 import { useExtendedForecast } from "../../Hooks/useExtendedForecast";
 import { useFavorites } from "../../Hooks/useFavorites";
+import { usePageTitle } from "../../Hooks/usePageTitle";
 import { useSearchHistory } from "../../Hooks/useSearchHistory";
 import { useTheme } from "../../Hooks/useTheme";
 import { useWeather } from "../../Hooks/useWeather";
@@ -42,6 +43,10 @@ export function Home() {
     fetchWeatherByCoords,
     setError,
   } = useWeather(unit);
+
+  usePageTitle(
+    weather ? `${weather.name} — MeteoHub` : "MeteoHub — Previsão do Tempo"
+  );
 
   const { extendedForecast, fetchExtendedForecast } = useExtendedForecast(unit);
 
