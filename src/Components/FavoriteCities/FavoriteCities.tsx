@@ -23,9 +23,9 @@ export const FavoriteCities = ({
         Favoritos
       </span>
       <div className={styles.chips}>
-        {favorites.map((city) => (
+        {favorites.map((city, index) => (
           <div
-            key={city}
+            key={`${city}-${index}`}
             className={`${styles.chip} ${city === currentCity ? styles.active : ""}`}
           >
             <button

@@ -24,8 +24,8 @@ export const SearchHistory = ({
       </span>
 
       <div className={styles.chips}>
-        {history.map((city) => (
-          <div key={city} className={styles.chip}>
+        {history.map((city, index) => (
+          <div key={`${city}-${index}`} className={styles.chip}>
             <button
               className={styles.chipBtn}
               onClick={() => onSelect(city)}
